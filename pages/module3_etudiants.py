@@ -10,6 +10,7 @@ dash.register_page(__name__, path="/etudiants", name="Etudiants")
 def layout():
     db = SessionLocal()
     c_opts = [{"label":f"{c.code} - {c.libelle}","value":c.code} for c in db.query(Course).all()]
+    classe_opts_e = [{"label":f"{cl.code} - {cl.nom}","value":cl.id} for cl in db.query(Classe).all()]
     db.close()
     return html.Div([
         dcc.Store(id='etu-classe-opts', data=classe_opts_e),
