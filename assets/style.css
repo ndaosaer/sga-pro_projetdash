@@ -182,7 +182,7 @@ body {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 4px; padding: 26px;
-  position: relative; overflow: hidden;
+  position: relative; overflow: visible;
   transition: border-color 0.3s, box-shadow 0.3s;
   box-shadow: var(--shadow-card);
 }
@@ -197,6 +197,7 @@ body {
   position: absolute; top: 0; left: 0; right: 0; height: 2px;
   background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
   opacity: 0.4;
+  z-index: 0; pointer-events: none;
 }
 
 .sga-card-title {
@@ -211,7 +212,7 @@ body {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 4px; padding: 24px;
-  position: relative; overflow: hidden;
+  position: relative; overflow: visible;
   transition: transform 0.2s, box-shadow 0.2s;
   box-shadow: var(--shadow-card);
 }
@@ -827,8 +828,15 @@ body {
 }
 /* Tous les conteneurs flex/card ne doivent pas couper */
 .sga-card,
+.kpi-card,
 .main-content,
-[style*="overflow: hidden"] {
+[style*="overflow: hidden"],
+[style*="overflow:hidden"] {
+  overflow: visible !important;
+}
+/* Conteneurs flex qui coupent les menus */
+div[style*="display:flex"],
+div[style*="display: flex"] {
   overflow: visible !important;
 }
 /* Options — fond solide, lisibles */
@@ -857,4 +865,26 @@ body {
 }
 .Select-option:last-child {
   border-bottom: none !important;
+}
+
+/* ── DROPDOWN FIX — pages Étudiants & Classes ── */
+/* Tous les wrappers Dash autour des dropdowns */
+.dash-dropdown,
+.dash-dropdown > div,
+.Select-container {
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 500 !important;
+}
+/* Quand ouvert, monter encore plus haut */
+.Select.is-open,
+.Select.is-open > .Select-control,
+.Select.is-open ~ .Select-menu-outer {
+  z-index: 99999 !important;
+}
+/* Forcer les colonnes/rows parentes à ne pas clipper */
+.row, .col, [class*="col-"],
+div[style*="gap"],
+div[style*="margin-bottom"] {
+  overflow: visible !important;
 }
