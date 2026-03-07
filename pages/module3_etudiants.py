@@ -41,7 +41,9 @@ def layout():
                               html.Div([
                                   html.Button("Template Excel", id="btn-tmpl", className="btn-sga btn-cyan"),
                                   dcc.Download(id="dl-tmpl"),
-                              ])]),
+                              ]),
+                              html.Div(id="fb-tmpl", style={"marginTop":"4px"}),
+                              ]),
                 ], style={"display":"flex","gap":"16px","alignItems":"flex-end","marginBottom":"20px"}),
                 dcc.Upload(id="upload-notes",
                     children=html.Div(["Glisser-deposer le fichier Excel, ou ", html.A("parcourir")]),
@@ -191,15 +193,18 @@ def build_fiche(sid):
         ], style={"display":"flex","gap":"16px"}),
     ])
 
-@callback(Output("dl-tmpl","data"), Input("btn-tmpl","n_clicks"), State("dd-cnotes","value"), prevent_initial_call=True)
-def dl_template(n,code):
-    if not code: return None
+@callback(Output("dl-tmpl","data"), Output("fb-tmpl","children"),
+          Input("btn-tmpl","n_clicks"), State("dd-cnotes","value"), prevent_initial_call=True)
+def dl_template(n, code):
+    if not code:
+        return None, html.Div("⚠ Sélectionnez d'abord un cours dans le menu déroulant.",
+                              style={"color":"var(--gold)","fontSize":"12px","marginTop":"6px"})
     db = SessionLocal()
     students = [(s.id, s.nom, s.prenom) for s in db.query(Student).filter_by(actif=True).order_by(Student.nom).all()]
     db.close()
     df = pd.DataFrame([{"ID":sid,"Nom":nom,"Prenom":prenom,"Note":"","Coefficient":1.0} for sid,nom,prenom in students])
     buf = io.BytesIO(); df.to_excel(buf,index=False); buf.seek(0)
-    return dcc.send_bytes(buf.read(), filename=f"notes_{code}.xlsx")
+    return dcc.send_bytes(buf.read(), filename=f"notes_{code}.xlsx"), ""
 
 @callback(Output("fb-upload","children"),
           Input("upload-notes","contents"), State("upload-notes","filename"), State("dd-cnotes","value"),

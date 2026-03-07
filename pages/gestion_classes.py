@@ -290,10 +290,11 @@ def render_detail(cl_id, r):
                         html.Div("Affecter un etudiant", className="sga-label"),
                         html.Div([
                             dcc.Dropdown(id="cl-add-etu", placeholder="Selectionner...",
-                                         style={"flex":"1"}),
+                                         style={"flex":"1","zIndex":"9999","position":"relative"}),
                             html.Button("Affecter", id="btn-cl-add-etu", n_clicks=0,
                                         className="btn-sga btn-gold", style={"flexShrink":"0"}),
-                        ], style={"display":"flex","gap":"8px","marginBottom":"12px"}),
+                        ], style={"display":"flex","gap":"8px","marginBottom":"12px",
+                                  "position":"relative","zIndex":"9999","overflow":"visible"}),
                         html.Div(id="cl-etu-feedback"),
                     ]),
                     html.Div([
@@ -307,7 +308,7 @@ def render_detail(cl_id, r):
                     ] if students else [html.Div("Aucun etudiant.",
                                                  style={"color":"var(--muted)","padding":"16px",
                                                         "textAlign":"center"})]),
-                ], className="sga-card", style={"flex":"1"}),
+                ], className="sga-card", style={"flex":"1","overflow":"visible"}),
 
                 # Cours
                 html.Div([
