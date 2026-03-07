@@ -202,9 +202,21 @@ def dl_template(n, code):
     db = SessionLocal()
     students = [(s.id, s.nom, s.prenom) for s in db.query(Student).filter_by(actif=True).order_by(Student.nom).all()]
     db.close()
-    df = pd.DataFrame([{"ID":sid,"Nom":nom,"Prenom":prenom,"Note":"","Coefficient":1.0} for sid,nom,prenom in students])
-    buf = io.BytesIO(); df.to_excel(buf,index=False); buf.seek(0)
-    return dcc.send_bytes(buf.read(), filename=f"notes_{code}.xlsx"), ""
+    rows = [{"ID":sid,"Nom":nom,"Prenom":prenom,"Note":"","Coefficient":1.0} for sid,nom,prenom in students]
+    df = pd.DataFrame(rows)
+    try:
+        import openpyxl  # noqa
+        buf = io.BytesIO()
+        df.to_excel(buf, index=False, engine="openpyxl")
+        buf.seek(0)
+        return dcc.send_bytes(buf.read(), filename=f"notes_{code}.xlsx"),                html.Div("✓ Template téléchargé.", style={"color":"var(--green)","fontSize":"12px"})
+    except ModuleNotFoundError:
+        # Fallback CSV si openpyxl absent
+        buf = io.StringIO()
+        df.to_csv(buf, index=False)
+        buf.seek(0)
+        return dcc.send_string(buf.read(), filename=f"notes_{code}.csv"),                html.Div("⚠ openpyxl manquant — fichier CSV téléchargé à la place.",
+                        style={"color":"var(--gold)","fontSize":"12px"})
 
 @callback(Output("fb-upload","children"),
           Input("upload-notes","contents"), State("upload-notes","filename"), State("dd-cnotes","value"),
