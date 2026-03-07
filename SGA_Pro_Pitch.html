@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SGA Pro — Système de Gestion Académique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --obsidian:   #1A1712;
+  --obsidian-md:#252118;
+  --gold:       #B8922A;
+  --gold-light: #D4A84B;
+  --gold-pale:  #F0D080;
+  --parchment:  #F5F0E6;
+  --parch-md:   #EDE7D9;
+  --muted:      #8A8070;
+  --green:      #2D6A3F;
+  --red:        #8B2500;
+  --white:      #FFFFFF;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+html{scroll-behavior:smooth;}
+
+body{
+  background:var(--obsidian);
+  color:var(--parchment);
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--obsidian);}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px;}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:999;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 64px;height:64px;
+  background:rgba(26,23,18,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(184,146,42,0.15);
+}
+.nav-logo{
+  font-family:'Playfair Display',serif;
+  font-size:22px;font-weight:900;
+  color:var(--gold);letter-spacing:4px;
+}
+.nav-logo span{color:var(--parchment);font-weight:400;font-style:italic;}
+.nav-links{display:flex;gap:32px;align-items:center;}
+.nav-links a{
+  color:var(--muted);text-decoration:none;
+  font-size:10px;letter-spacing:2.5px;text-transform:uppercase;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--gold);}
+.nav-cta{
+  background:var(--gold);color:var(--obsidian) !important;
+  padding:10px 22px;font-weight:600 !important;
+  font-size:10px !important;letter-spacing:2px;
+}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  display:flex;align-items:center;
+  padding:100px 64px 80px;
+  position:relative;overflow:hidden;
+  gap:80px;
+}
+
+.hero-grid{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(184,146,42,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(184,146,42,0.06) 1px, transparent 1px);
+  background-size:72px 72px;
+  mask-image:radial-gradient(ellipse at 15% 50%, black 0%, transparent 65%);
+}
+
+.hero-orb{
+  position:absolute;right:-200px;top:50%;transform:translateY(-50%);
+  width:700px;height:700px;border-radius:50%;
+  background:radial-gradient(ellipse, rgba(184,146,42,0.07) 0%, transparent 65%);
+  pointer-events:none;
+  animation:float 10s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(-50%);}
+  50%{transform:translateY(calc(-50% - 20px));}
+}
+
+.hero-content{flex:1;max-width:600px;position:relative;z-index:1;}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:12px;
+  font-size:10px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:28px;
+  animation:fadeUp .6s ease forwards;
+}
+.eyebrow::before{content:'';width:28px;height:1px;background:var(--gold);}
+
+.hero-h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(48px,6vw,84px);font-weight:900;
+  line-height:1.0;letter-spacing:-1px;margin-bottom:24px;
+  animation:fadeUp .7s .1s ease both;
+}
+.hero-h1 em{color:var(--gold);font-style:italic;display:block;}
+
+.hero-sub{
+  font-size:15px;color:var(--muted);
+  max-width:500px;line-height:2;margin-bottom:40px;
+  animation:fadeUp .7s .2s ease both;
+}
+
+.hero-ctas{
+  display:flex;gap:14px;flex-wrap:wrap;margin-bottom:56px;
+  animation:fadeUp .7s .3s ease both;
+}
+
+.btn-primary{
+  background:var(--gold);color:var(--obsidian);
+  padding:16px 32px;font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  border:none;cursor:pointer;text-decoration:none;display:inline-block;
+  transition:all .25s;
+  box-shadow:0 4px 24px rgba(184,146,42,0.25);
+}
+.btn-primary:hover{
+  background:var(--gold-light);
+  transform:translateY(-2px);
+  box-shadow:0 8px 36px rgba(184,146,42,0.4);
+}
+
+.btn-ghost{
+  background:transparent;color:var(--muted);
+  padding:15px 28px;font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  border:1px solid rgba(184,146,42,0.25);cursor:pointer;
+  text-decoration:none;display:inline-block;transition:all .2s;
+}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+
+.stats-bar{
+  display:flex;
+  border:1px solid rgba(184,146,42,0.2);
+  overflow:hidden;background:rgba(255,255,255,0.03);
+  max-width:520px;
+  animation:fadeUp .7s .4s ease both;
+}
+.stat-item{flex:1;padding:20px 16px;text-align:center;border-right:1px solid rgba(184,146,42,0.15);}
+.stat-item:last-child{border-right:none;}
+.stat-val{
+  font-family:'Playfair Display',serif;
+  font-size:38px;font-weight:700;color:var(--gold);line-height:1;
+}
+.stat-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:6px;}
+
+.hero-right{flex:1;position:relative;z-index:1;}
+.mockup{
+  border:1px solid rgba(184,146,42,0.2);
+  border-radius:8px;overflow:hidden;
+  background:var(--obsidian-md);
+  box-shadow:0 40px 100px rgba(0,0,0,0.5),0 8px 24px rgba(0,0,0,0.3),
+             inset 0 1px 0 rgba(255,255,255,0.05);
+  transform:perspective(1000px) rotateY(-5deg) rotateX(2deg);
+  transition:transform .5s ease;
+}
+.mockup:hover{transform:perspective(1000px) rotateY(-1deg) rotateX(0);}
+.mockup-bar{
+  background:var(--obsidian);padding:10px 16px;
+  display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid rgba(184,146,42,0.1);
+}
+.dot{width:10px;height:10px;border-radius:50%;}
+.mockup-content{padding:20px;}
+.mock-kpi-row{display:flex;gap:10px;margin-bottom:12px;}
+.mock-kpi{
+  flex:1;height:52px;background:rgba(184,146,42,0.06);
+  border:1px solid rgba(184,146,42,0.15);border-radius:3px;
+  display:flex;flex-direction:column;justify-content:center;padding:8px 10px;
+}
+.mock-kv{font-family:'Playfair Display',serif;font-size:20px;color:var(--gold);line-height:1;}
+.mock-kl{font-size:8px;color:var(--muted);letter-spacing:1px;margin-top:2px;}
+.mock-chart{
+  height:90px;background:rgba(184,146,42,0.04);
+  border:1px solid rgba(184,146,42,0.1);border-radius:3px;margin-bottom:12px;
+  padding:10px;display:flex;align-items:flex-end;gap:6px;
+}
+.bar{border-radius:2px 2px 0 0;flex:1;transition:height .3s;}
+.mock-table{border:1px solid rgba(184,146,42,0.1);border-radius:3px;overflow:hidden;}
+.mock-th{
+  background:rgba(184,146,42,0.08);padding:6px 10px;
+  display:flex;gap:20px;
+}
+.mock-th span{font-size:8px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;flex:1;}
+.mock-tr{padding:7px 10px;display:flex;gap:20px;border-top:1px solid rgba(184,146,42,0.06);}
+.mock-tr span{font-size:10px;color:var(--muted);flex:1;}
+
+/* ── TICKER ── */
+.ticker{
+  background:var(--gold);padding:14px 0;
+  overflow:hidden;white-space:nowrap;
+}
+.ticker-inner{
+  display:inline-block;
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--obsidian);
+  font-weight:600;animation:ticker 30s linear infinite;
+}
+.ticker-inner span{margin:0 24px;opacity:0.7;}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ── SECTIONS ── */
+section{padding:110px 64px;}
+.section-alt{background:var(--obsidian-md);}
+
+.section-eyebrow{
+  display:flex;align-items:center;gap:14px;
+  font-size:10px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:16px;
+}
+.section-eyebrow::before{content:'';width:24px;height:1px;background:var(--gold);}
+
+.section-h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(32px,4vw,56px);font-weight:900;
+  line-height:1.1;margin-bottom:16px;
+  color:var(--parchment);
+}
+.section-h2 em{color:var(--gold);font-style:italic;}
+
+.section-lead{
+  font-size:15px;color:var(--muted);
+  max-width:560px;line-height:2;margin-bottom:60px;
+}
+
+/* ── PROBLEM / SOLUTION ── */
+.probsol{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid rgba(184,146,42,0.15);}
+.ps-bad{padding:48px;border-right:1px solid rgba(184,146,42,0.15);background:rgba(139,37,0,0.04);}
+.ps-good{padding:48px;background:rgba(45,106,63,0.04);}
+.ps-title{
+  font-family:'Playfair Display',serif;font-size:22px;
+  margin-bottom:28px;font-weight:700;
+}
+.pain-list,.gain-list{list-style:none;display:flex;flex-direction:column;gap:14px;}
+.pain-list li,.gain-list li{
+  display:flex;gap:14px;font-size:14px;line-height:1.7;color:var(--muted);
+}
+.pain-list li::before{content:'✗';color:var(--red);font-weight:700;flex-shrink:0;margin-top:2px;}
+.gain-list li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:2px;}
+.gain-list li{color:var(--parchment);}
+
+/* ── MODULES GRID ── */
+.modules-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border:1px solid rgba(184,146,42,0.12);gap:0;
+}
+.module-card{
+  padding:28px 24px;
+  border-right:1px solid rgba(184,146,42,0.12);
+  border-bottom:1px solid rgba(184,146,42,0.12);
+  background:var(--obsidian-md);
+  transition:all .2s;position:relative;overflow:hidden;
+}
+.module-card::after{
+  content:'';position:absolute;bottom:0;left:24px;right:24px;height:2px;
+  background:var(--gold);transform:scaleX(0);transition:transform .3s;transform-origin:left;
+}
+.module-card:hover{background:rgba(184,146,42,0.05);}
+.module-card:hover::after{transform:scaleX(1);}
+.module-icon{font-size:28px;margin-bottom:10px;display:block;}
+.module-name{
+  font-family:'Playfair Display',serif;
+  font-size:16px;font-weight:700;color:var(--parchment);margin-bottom:6px;
+}
+.module-desc{font-size:11px;color:var(--muted);line-height:1.7;}
+.module-badge{
+  display:inline-block;margin-top:10px;
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  padding:3px 10px;background:rgba(184,146,42,0.1);
+  color:var(--gold);border:1px solid rgba(184,146,42,0.2);
+}
+
+/* ── STACK ── */
+.stack-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.stack-card{
+  background:var(--obsidian);border:1px solid rgba(184,146,42,0.12);
+  padding:28px 20px;position:relative;overflow:hidden;transition:all .2s;
+}
+.stack-card:hover{border-color:rgba(184,146,42,0.4);transform:translateY(-2px);}
+.stack-top{height:4px;margin:-28px -20px 24px;background:var(--gold);}
+.stack-label{
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:16px;
+}
+.stack-item{
+  font-family:'Playfair Display',serif;font-size:15px;
+  color:var(--parchment);margin-bottom:10px;padding-left:12px;
+  border-left:2px solid rgba(184,146,42,0.3);
+}
+
+/* ── PAYMENT ── */
+.pay-flow{
+  display:flex;align-items:center;gap:0;
+  margin-bottom:60px;overflow:hidden;
+  border:1px solid rgba(184,146,42,0.15);
+}
+.pay-step{
+  flex:1;padding:32px 20px;text-align:center;
+  border-right:1px solid rgba(184,146,42,0.15);
+  position:relative;background:var(--obsidian-md);transition:background .2s;
+}
+.pay-step:last-child{border-right:none;}
+.pay-step:hover{background:rgba(184,146,42,0.05);}
+.pay-icon{font-size:32px;margin-bottom:12px;display:block;}
+.pay-num{
+  font-family:'Playfair Display',serif;font-size:36px;
+  color:var(--gold);opacity:.3;
+  position:absolute;top:8px;right:14px;line-height:1;
+}
+.pay-name{
+  font-family:'Playfair Display',serif;font-size:15px;
+  font-weight:700;color:var(--parchment);margin-bottom:6px;
+}
+.pay-desc{font-size:10px;color:var(--muted);line-height:1.6;}
+
+.pay-methods{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.pay-method{
+  border:1px solid rgba(184,146,42,0.2);padding:24px 16px;
+  text-align:center;background:var(--obsidian);transition:all .2s;
+}
+.pay-method:hover{border-color:var(--gold);transform:translateY(-2px);}
+.pay-method-icon{font-size:30px;margin-bottom:10px;display:block;}
+.pay-method-name{
+  font-family:'Playfair Display',serif;font-size:15px;
+  font-weight:700;color:var(--parchment);margin-bottom:4px;
+}
+.pay-method-zone{font-size:10px;color:var(--muted);}
+
+/* ── ROLES ── */
+.roles-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+.role-card{
+  border:1px solid rgba(184,146,42,0.12);padding:24px 16px;
+  text-align:center;background:var(--obsidian-md);position:relative;
+  overflow:hidden;transition:all .2s;
+}
+.role-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--gold);
+}
+.role-card:hover{transform:translateY(-3px);border-color:rgba(184,146,42,0.3);}
+.role-icon{font-size:32px;margin-bottom:12px;display:block;}
+.role-name{
+  font-family:'Playfair Display',serif;font-size:15px;
+  font-weight:700;color:var(--parchment);margin-bottom:8px;
+}
+.role-perms{font-size:10px;color:var(--muted);line-height:1.8;}
+
+/* ── CTA ── */
+.cta-section{
+  text-align:center;padding:120px 64px;
+  position:relative;overflow:hidden;
+}
+.cta-orb{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(184,146,42,0.08),transparent 65%);
+  pointer-events:none;
+}
+
+/* ── FOOTER ── */
+footer{
+  background:black;padding:64px 64px 32px;
+  border-top:1px solid rgba(184,146,42,0.15);
+}
+.footer-grid{
+  display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;
+  margin-bottom:48px;
+}
+.footer-brand{
+  font-family:'Playfair Display',serif;
+  font-size:28px;font-weight:900;color:var(--gold);
+  letter-spacing:4px;margin-bottom:16px;
+}
+.footer-desc{font-size:13px;color:var(--muted);line-height:1.9;max-width:300px;}
+.footer-col-title{
+  font-size:9px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:18px;
+}
+.footer-link{
+  display:block;color:rgba(245,240,230,0.35);
+  text-decoration:none;font-size:13px;margin-bottom:10px;
+  transition:all .15s;
+}
+.footer-link:hover{color:var(--parchment);padding-left:4px;}
+.footer-bottom{
+  padding-top:24px;border-top:1px solid rgba(255,255,255,0.05);
+  display:flex;justify-content:space-between;
+  font-size:10px;color:rgba(255,255,255,0.15);letter-spacing:1px;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.reveal{opacity:0;transform:translateY(24px);transition:all .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SGA<span> Pro</span></div>
+  <div class="nav-links">
+    <a href="#modules">Modules</a>
+    <a href="#stack">Stack</a>
+    <a href="#paiement">Paiement</a>
+    <a href="#deploiement">Déploiement</a>
+    <a href="#contact" class="nav-cta">Accéder →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-orb"></div>
+
+  <div class="hero-content">
+    <div class="eyebrow">Système de Gestion Académique</div>
+
+    <h1 class="hero-h1">
+      Pilotez votre
+      <em>établissement.</em>
+    </h1>
+
+    <p class="hero-sub">
+      SGA Pro est la plateforme académique complète conçue pour les universités et grandes écoles d'Afrique de l'Ouest. 23 modules intégrés, paiements Wave & Orange Money, déployé en production.
+    </p>
+
+    <div class="hero-ctas">
+      <a href="#modules" class="btn-primary">Découvrir les modules →</a>
+      <a href="#contact" class="btn-ghost">Demander une démo</a>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-val">23</div>
+        <div class="stat-lbl">Modules</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">5</div>
+        <div class="stat-lbl">Rôles</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">4</div>
+        <div class="stat-lbl">Paiements</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">∞</div>
+        <div class="stat-lbl">Étudiants</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="mockup">
+      <div class="mockup-bar">
+        <div class="dot" style="background:#ff5f57"></div>
+        <div class="dot" style="background:#febc2e"></div>
+        <div class="dot" style="background:#28c840"></div>
+        <div style="flex:1;height:20px;background:rgba(184,146,42,0.08);border-radius:3px;margin-left:8px;display:flex;align-items:center;padding:0 10px;">
+          <span style="font-size:9px;color:var(--muted);">sga-pro.up.railway.app</span>
+        </div>
+      </div>
+      <div class="mockup-content">
+        <div class="mock-kpi-row">
+          <div class="mock-kpi"><div class="mock-kv">247</div><div class="mock-kl">Étudiants</div></div>
+          <div class="mock-kpi"><div class="mock-kv">14.2</div><div class="mock-kl">Moyenne</div></div>
+          <div class="mock-kpi"><div class="mock-kv">94%</div><div class="mock-kl">Présence</div></div>
+          <div class="mock-kpi"><div class="mock-kv">3.2M</div><div class="mock-kl">Perçu (FCFA)</div></div>
+        </div>
+        <div class="mock-chart">
+          <div class="bar" style="height:45%;background:rgba(184,146,42,0.4)"></div>
+          <div class="bar" style="height:70%;background:rgba(184,146,42,0.6)"></div>
+          <div class="bar" style="height:55%;background:rgba(184,146,42,0.4)"></div>
+          <div class="bar" style="height:85%;background:var(--gold)"></div>
+          <div class="bar" style="height:65%;background:rgba(184,146,42,0.5)"></div>
+          <div class="bar" style="height:90%;background:var(--gold)"></div>
+          <div class="bar" style="height:75%;background:rgba(184,146,42,0.6)"></div>
+          <div class="bar" style="height:60%;background:rgba(184,146,42,0.4)"></div>
+        </div>
+        <div class="mock-table">
+          <div class="mock-th">
+            <span>Étudiant</span><span>Moyenne</span><span>Statut</span>
+          </div>
+          <div class="mock-tr"><span>Diallo Fatou</span><span style="color:var(--green)">16.4</span><span style="color:var(--green);font-size:9px">✓ Admis</span></div>
+          <div class="mock-tr"><span>Ndiaye Ibra</span><span style="color:var(--gold)">13.8</span><span style="color:var(--muted);font-size:9px">En cours</span></div>
+          <div class="mock-tr"><span>Fall Mariama</span><span style="color:var(--green)">17.1</span><span style="color:var(--green);font-size:9px">✓ Admis</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>Gestion Étudiants</span><span>·</span>
+    <span>Appel Rapide</span><span>·</span>
+    <span>Notes & Moyennes</span><span>·</span>
+    <span>Emploi du Temps</span><span>·</span>
+    <span>Concours d'Admission</span><span>·</span>
+    <span>Paiement Wave</span><span>·</span>
+    <span>Orange Money</span><span>·</span>
+    <span>Rapports PDF</span><span>·</span>
+    <span>Analytics</span><span>·</span>
+    <span>Messagerie</span><span>·</span>
+    <span>Gestion Étudiants</span><span>·</span>
+    <span>Appel Rapide</span><span>·</span>
+    <span>Notes & Moyennes</span><span>·</span>
+    <span>Emploi du Temps</span><span>·</span>
+    <span>Concours d'Admission</span><span>·</span>
+    <span>Paiement Wave</span><span>·</span>
+    <span>Orange Money</span><span>·</span>
+    <span>Rapports PDF</span><span>·</span>
+    <span>Analytics</span><span>·</span>
+    <span>Messagerie</span>
+  </div>
+</div>
+
+<!-- PROBLÈME / SOLUTION -->
+<section class="section-alt">
+  <div class="section-eyebrow reveal">Pourquoi SGA Pro</div>
+  <h2 class="section-h2 reveal">Avant <em>et après.</em></h2>
+  <p class="section-lead reveal">La gestion académique africaine mérite mieux que des classeurs, des feuilles Excel et des files d'attente.</p>
+
+  <div class="probsol reveal">
+    <div class="ps-bad">
+      <div class="ps-title" style="color:var(--red)">😤 Avant SGA Pro</div>
+      <ul class="pain-list">
+        <li>Dossiers papier perdus, archives introuvables</li>
+        <li>Paiements en caisse uniquement, sans traçabilité</li>
+        <li>Bulletins faits à la main sur plusieurs semaines</li>
+        <li>Pas de vision globale pour la direction</li>
+        <li>Présences notées sur papier, saisies après coup</li>
+        <li>Zéro accès distant pour les enseignants et parents</li>
+      </ul>
+    </div>
+    <div class="ps-good">
+      <div class="ps-title" style="color:var(--green)">✨ Avec SGA Pro</div>
+      <ul class="gain-list">
+        <li>Base de données centralisée, accès instantané</li>
+        <li>Paiement Wave, Orange Money, carte en 30 secondes</li>
+        <li>Bulletins PDF générés automatiquement</li>
+        <li>Tableau de bord direction en temps réel</li>
+        <li>Appel en classe directement sur l'application</li>
+        <li>Accessible partout, 24h/24, depuis n'importe quel appareil</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section id="modules">
+  <div class="section-eyebrow reveal">Fonctionnalités</div>
+  <h2 class="section-h2 reveal">23 modules <em>intégrés.</em></h2>
+  <p class="section-lead reveal">Tout ce dont un établissement a besoin, dans une seule interface cohérente.</p>
+
+  <div class="modules-grid reveal">
+    <div class="module-card">
+      <span class="module-icon">📊</span>
+      <div class="module-name">Tableau de bord</div>
+      <div class="module-desc">KPIs en temps réel, alertes, notifications. Vue globale pour la direction.</div>
+      <span class="module-badge">Admin</span>
+    </div>
+    <div class="module-card">
+      <span class="module-icon">👥</span>
+      <div class="module-name">Gestion Étudiants</div>
+      <div class="module-desc">Dossiers complets, import CSV, export, filtres par classe et statut.</div>
+      <span class="module-badge">Admin</span>
+    </div>
+    <div class="module-card">
+      <span class="module-icon">✅</span>
+      <div class="module-name">Appel Rapide</div>
+      <div class="module-desc">Saisie des présences en moins de 10 secondes. Historique complet.</div>
+      <span class="module-badge">Enseignant</span>
+    </div>
+    <div class="module-card">
+      <span class="module-icon">📝</span>
+      <div class="module-name">Notes & Moyennes</div>
+      <div class="module-desc">Saisie des notes, calcul automatique des moyennes et classements.</div>
+      <span class="module-badge">Enseignant</span>
+    </div>
+    <div class="module-card">
+      <span class="module-icon">🏫</span>
+      <div class="module-name">Classes & Niveaux</div>
+      <div class="module-desc">Organisation par niveaux (L, M, D), filières, et affectation d'étudiants.</div>
+      <span class="module-badge">Admin</span>
+    </div>
+    <div class="module-card">
+      <span class="module-icon">📅</span>
+      <div class="module-name">Emploi du Temps</div>
+      <div class="module-desc">Grille visuelle, détection de conflits, export PDF A4 paysage.</div>
+      <span class="module-badge">Admin</span>
+    </div>
+    <div class="module-card">
+      <span class="module-icon">🎓</span>
+      <div class="module-name">Concours</div>
+      <div class="module-desc">Portail public de candidature, suivi dossier, liste des admis.</div>
+      <span class="module-badge">Public</span>
+    </div>
+    <div class="module-card">
+      <span class="module-icon">💰</span>
+      <div class="module-name">Scolarité</div>
+      <div class="module-desc">Suivi des paiements, relances, historique par étudiant et année.</div>
+      <span class="module-badge">Secrétariat</span>
+    </div>
+    <div class="module-card">
+      <span class="module-icon">💳</span>
+      <div class="module-name">Paiement en ligne</div>
+      <div class="module-desc">Wave, Orange Money, Free Money, Carte. Webhook automatique.</div>
+      <span class="module-badge">Paytech</span>
+    </div>
+    <div class="module-card">
+      <span class="module-icon">📊</span>
+      <div class="module-name">Analytics</div>
+      <div class="module-desc">Graphiques interactifs Plotly, tendances, comparaisons par période.</div>
+      <span class="module-badge">Direction</span>
+    </div>
+    <div class="module-card">
+      <span class="module-icon">💬</span>
+      <div class="module-name">Messagerie</div>
+      <div class="module-desc">Messagerie interne entre tous les rôles. Notifications en temps réel.</div>
+      <span class="module-badge">Tous</span>
+    </div>
+    <div class="module-card">
+      <span class="module-icon">📄</span>
+      <div class="module-name">Rapports PDF</div>
+      <div class="module-desc">Rapports académiques, financiers, concours. Envoi email intégré.</div>
+      <span class="module-badge">Admin</span>
+    </div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section id="stack" class="section-alt">
+  <div class="section-eyebrow reveal">Technique</div>
+  <h2 class="section-h2 reveal">Stack <em>robuste.</em></h2>
+  <p class="section-lead reveal">Technologies modernes, maintenables, déployables partout.</p>
+
+  <div class="stack-grid reveal">
+    <div class="stack-card">
+      <div class="stack-top" style="background:var(--gold)"></div>
+      <div class="stack-label">Frontend</div>
+      <div class="stack-item">Dash (Plotly)</div>
+      <div class="stack-item">HTML / CSS</div>
+      <div class="stack-item">Obsidian Gold Theme</div>
+      <div class="stack-item">JetBrains Mono</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-top" style="background:var(--muted)"></div>
+      <div class="stack-label">Backend</div>
+      <div class="stack-item">Python 3.11</div>
+      <div class="stack-item">Flask + Gunicorn</div>
+      <div class="stack-item">Dash Callbacks</div>
+      <div class="stack-item">Werkzeug Security</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-top" style="background:var(--green)"></div>
+      <div class="stack-label">Données</div>
+      <div class="stack-item">SQLAlchemy ORM</div>
+      <div class="stack-item">SQLite / PostgreSQL</div>
+      <div class="stack-item">ReportLab PDF</div>
+      <div class="stack-item">Pandas</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-top" style="background:#9B5E2A"></div>
+      <div class="stack-label">Déploiement</div>
+      <div class="stack-item">Railway.app</div>
+      <div class="stack-item">GitHub CI/CD</div>
+      <div class="stack-item">HTTPS automatique</div>
+      <div class="stack-item">Volume persistant</div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIEMENT -->
+<section id="paiement">
+  <div class="section-eyebrow reveal">Intégration</div>
+  <h2 class="section-h2 reveal">Paiements <em>100% locaux.</em></h2>
+  <p class="section-lead reveal">Via Paytech — l'agrégateur de paiement leader en Afrique de l'Ouest. Un candidat peut payer en 30 secondes depuis son téléphone.</p>
+
+  <div class="pay-flow reveal">
+    <div class="pay-step">
+      <span class="pay-num">1</span>
+      <span class="pay-icon">👆</span>
+      <div class="pay-name">Clic Payer</div>
+      <div class="pay-desc">Candidat ou étudiant déclenche le paiement</div>
+    </div>
+    <div class="pay-step">
+      <span class="pay-num">2</span>
+      <span class="pay-icon">📋</span>
+      <div class="pay-name">Facture créée</div>
+      <div class="pay-desc">SGA Pro envoie la requête à Paytech</div>
+    </div>
+    <div class="pay-step">
+      <span class="pay-num">3</span>
+      <span class="pay-icon">💳</span>
+      <div class="pay-name">Checkout Paytech</div>
+      <div class="pay-desc">Page de paiement sécurisée Paytech</div>
+    </div>
+    <div class="pay-step">
+      <span class="pay-num">4</span>
+      <span class="pay-icon">📱</span>
+      <div class="pay-name">Paiement mobile</div>
+      <div class="pay-desc">Wave / Orange Money / Free Money / Carte</div>
+    </div>
+    <div class="pay-step">
+      <span class="pay-num">5</span>
+      <span class="pay-icon">✅</span>
+      <div class="pay-name">Confirmation</div>
+      <div class="pay-desc">Webhook automatique, base mise à jour</div>
+    </div>
+  </div>
+
+  <div class="pay-methods reveal">
+    <div class="pay-method">
+      <span class="pay-method-icon">🌊</span>
+      <div class="pay-method-name">Wave</div>
+      <div class="pay-method-zone">Sénégal · CI</div>
+    </div>
+    <div class="pay-method">
+      <span class="pay-method-icon">🟠</span>
+      <div class="pay-method-name">Orange Money</div>
+      <div class="pay-method-zone">SN · CI · ML · BF</div>
+    </div>
+    <div class="pay-method">
+      <span class="pay-method-icon">🔵</span>
+      <div class="pay-method-name">Free Money</div>
+      <div class="pay-method-zone">Sénégal</div>
+    </div>
+    <div class="pay-method">
+      <span class="pay-method-icon">💳</span>
+      <div class="pay-method-name">Carte bancaire</div>
+      <div class="pay-method-zone">Visa · Mastercard</div>
+    </div>
+  </div>
+</section>
+
+<!-- RÔLES -->
+<section class="section-alt">
+  <div class="section-eyebrow reveal">Accès</div>
+  <h2 class="section-h2 reveal">5 rôles <em>distincts.</em></h2>
+  <p class="section-lead reveal">Chaque utilisateur voit exactement ce dont il a besoin — ni plus, ni moins.</p>
+
+  <div class="roles-grid reveal">
+    <div class="role-card">
+      <span class="role-icon">👑</span>
+      <div class="role-name">Admin</div>
+      <div class="role-perms">Accès total<br>Configuration<br>Tous les modules</div>
+    </div>
+    <div class="role-card">
+      <span class="role-icon">🎓</span>
+      <div class="role-name">Enseignant</div>
+      <div class="role-perms">Appel rapide<br>Notes<br>Mes cours</div>
+    </div>
+    <div class="role-card">
+      <span class="role-icon">📚</span>
+      <div class="role-name">Étudiant</div>
+      <div class="role-perms">Mon dossier<br>Mes notes<br>Mon emploi du temps</div>
+    </div>
+    <div class="role-card">
+      <span class="role-icon">📋</span>
+      <div class="role-name">Secrétariat</div>
+      <div class="role-perms">Inscriptions<br>Scolarité<br>Documents</div>
+    </div>
+    <div class="role-card">
+      <span class="role-icon">👨‍👩‍👧</span>
+      <div class="role-name">Parent</div>
+      <div class="role-perms">Résultats enfant<br>Paiements<br>Absences</div>
+    </div>
+  </div>
+</section>
+
+<!-- DÉPLOIEMENT -->
+<section id="deploiement">
+  <div class="section-eyebrow reveal">Mise en production</div>
+  <h2 class="section-h2 reveal">Déployé en <em>5 minutes.</em></h2>
+  <p class="section-lead reveal">Git → GitHub → Railway. L'application est en ligne avec une URL HTTPS publique, sans serveur à gérer.</p>
+
+  <div class="stack-grid reveal" style="grid-template-columns:repeat(4,1fr)">
+    <div class="stack-card" style="text-align:center">
+      <div class="stack-top"></div>
+      <div style="font-size:36px;margin:16px 0">01</div>
+      <div class="stack-label" style="margin-bottom:12px">Git Init</div>
+      <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;line-height:2">
+        git init<br>git add .<br>git commit
+      </div>
+    </div>
+    <div class="stack-card" style="text-align:center">
+      <div class="stack-top"></div>
+      <div style="font-size:36px;margin:16px 0">02</div>
+      <div class="stack-label" style="margin-bottom:12px">GitHub</div>
+      <div style="font-size:11px;color:var(--muted);line-height:2">Créer un repo<br>git push<br>origin main</div>
+    </div>
+    <div class="stack-card" style="text-align:center">
+      <div class="stack-top"></div>
+      <div style="font-size:36px;margin:16px 0">03</div>
+      <div class="stack-label" style="margin-bottom:12px">Railway</div>
+      <div style="font-size:11px;color:var(--muted);line-height:2">New Project<br>Deploy GitHub<br>Auto-detect</div>
+    </div>
+    <div class="stack-card" style="text-align:center">
+      <div class="stack-top" style="background:var(--green)"></div>
+      <div style="font-size:36px;margin:16px 0;color:var(--green)">✓</div>
+      <div class="stack-label" style="margin-bottom:12px;color:var(--green)">En ligne !</div>
+      <div style="font-size:11px;color:var(--muted);line-height:2">HTTPS<br>URL publique<br>~2 minutes</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-orb"></div>
+  <div class="section-eyebrow reveal" style="justify-content:center">Prêt à démarrer</div>
+  <h2 class="section-h2 reveal" style="font-size:clamp(36px,5vw,64px)">
+    SGA Pro est <em>opérationnel.</em>
+  </h2>
+  <p style="font-size:15px;color:var(--muted);max-width:500px;margin:0 auto 48px;line-height:2;" class="reveal">
+    Déployé sur Railway, intégré à Paytech, prêt à accueillir vos étudiants dès aujourd'hui.
+  </p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;" class="reveal">
+    <a href="#" class="btn-primary" style="font-size:13px;padding:18px 40px">Accéder à SGA Pro →</a>
+    <a href="mailto:contact@sgapro.sn" class="btn-ghost" style="font-size:13px;padding:18px 32px">Contacter l'équipe</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">SGA Pro</div>
+      <p class="footer-desc">Système de Gestion Académique complet pour les établissements d'enseignement supérieur d'Afrique de l'Ouest.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Modules</div>
+      <a href="#" class="footer-link">Tableau de bord</a>
+      <a href="#" class="footer-link">Gestion étudiants</a>
+      <a href="#" class="footer-link">Concours</a>
+      <a href="#" class="footer-link">Paiements</a>
+      <a href="#" class="footer-link">Rapports PDF</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Technique</div>
+      <a href="#" class="footer-link">Stack Python/Dash</a>
+      <a href="#" class="footer-link">Railway.app</a>
+      <a href="#" class="footer-link">Paytech API</a>
+      <a href="#" class="footer-link">Documentation</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 SGA Pro · Tous droits réservés</span>
+    <span>Conçu pour l'Afrique · Propulsé par Railway</span>
+  </div>
+</footer>
+
+<script>
+// Reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
