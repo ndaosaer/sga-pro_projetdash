@@ -3,7 +3,7 @@ from dash import html, dcc, Input, Output, State, callback, ALL
 import plotly.graph_objects as go
 import pandas as pd, base64, io
 from database import SessionLocal
-from models import Student, Grade, Course, Attendance, Session
+from models import Classe, Student, Grade, Course, Attendance, Session
 
 dash.register_page(__name__, path="/etudiants", name="Etudiants")
 
@@ -12,6 +12,7 @@ def layout():
     c_opts = [{"label":f"{c.code} - {c.libelle}","value":c.code} for c in db.query(Course).all()]
     db.close()
     return html.Div([
+        dcc.Store(id='etu-classe-opts', data=classe_opts_e),
         html.Div([
             html.Div([html.Div("Gestion des Etudiants", className="page-title"),
                       html.Div("Fiches individuelles - Notes - Import/Export", className="page-subtitle")]),
@@ -22,7 +23,7 @@ def layout():
                 html.Div("Promotion", className="sga-card-title", style={"marginBottom":"16px"}),
                 html.Div(id="student-list"),
                 dcc.Interval(id="iv-stu", interval=3000, max_intervals=1),
-            ], className="sga-card", style={"width":"260px","flexShrink":"0","overflowY":"auto","maxHeight":"78vh"}),
+            ], className="sga-card", style={"width":"260px","minWidth":"0","flexShrink":"0","overflowY":"auto","overflowX":"hidden","maxHeight":"78vh"}),
             html.Div(id="fiche-detail", style={"flex":"1"}),
         ], style={"display":"flex","gap":"20px","marginBottom":"24px"}),
 
@@ -31,7 +32,10 @@ def layout():
                 html.Div("Import / Export des Notes", className="sga-card-title", style={"marginBottom":"20px"}),
                 html.Div([
                     html.Div([html.Span("Cours cible", className="sga-label"),
-                              dcc.Dropdown(id="dd-cnotes", options=c_opts, placeholder="Cours...")]),
+                              dcc.Dropdown(id="dd-cnotes", options=c_opts, placeholder="Cours...")
+                          ]),
+                          html.Div([html.Label("Classe", style={"fontSize":"12px","color":"var(--muted)","marginBottom":"4px"}),
+                          dcc.Dropdown(id="dd-classe-etu", placeholder="Toutes les classes", clearable=True)]),
                     html.Div([html.Span(" ", className="sga-label"),
                               html.Div([
                                   html.Button("Template Excel", id="btn-tmpl", className="btn-sga btn-cyan"),
@@ -46,9 +50,16 @@ def layout():
         ]),
     ])
 
+
+@callback(Output("dd-classe-etu","options"), Input("etu-classe-opts","data"))
+def load_classe_opts_etu(data): return data or []
+
+
 @callback(Output("student-list","children"), Input("iv-stu","n_intervals"))
 def load_list(_):
     db = SessionLocal()
+    classes  = db.query(Classe).filter_by(actif=True).order_by(Classe.nom).all()
+    classe_opts_e = [{"label": c.nom, "value": c.id} for c in classes]
     students = db.query(Student).filter_by(actif=True).order_by(Student.nom).all()
     grades   = db.query(Grade).all()
     # Calculer moyennes dans la session
@@ -68,14 +79,18 @@ def load_list(_):
                 "fontSize":"11px","fontWeight":"700","color":"var(--bg-primary)",
             }),
             html.Div([
-                html.Div(f"{nom} {prenom}", style={"fontSize":"12px","fontWeight":"600"}),
+                html.Div(f"{nom} {prenom}", style={
+                    "fontSize":"12px","fontWeight":"600",
+                    "overflow":"hidden","textOverflow":"ellipsis","whiteSpace":"nowrap"
+                }),
                 html.Div(f"Moy: {moy}/20" if moy else "---",
                          style={"fontSize":"10px","color":"var(--text-muted)"}),
-            ]),
+            ], style={"minWidth":"0","flex":"1"}),
         ], id={"type":"stu-item","index":sid},
            style={"display":"flex","gap":"10px","alignItems":"center",
                   "padding":"10px 8px","borderRadius":"8px","cursor":"pointer",
-                  "transition":"background 0.15s","borderBottom":"1px solid rgba(255,255,255,0.04)"})
+                  "transition":"background 0.15s","borderBottom":"1px solid rgba(255,255,255,0.04)",
+                  "overflow":"hidden","width":"100%","boxSizing":"border-box"})
         for sid, nom, prenom, moy in stu_data
     ])
 

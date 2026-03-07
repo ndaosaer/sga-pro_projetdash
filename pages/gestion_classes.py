@@ -299,10 +299,10 @@ def render_detail(cl_id, r):
                     html.Div([
                         html.Div([
                             html.Div(f"{s.nom} {s.prenom}",
-                                     style={"fontWeight":"600","fontSize":"13px"}),
+                                     style={"fontWeight":"600","fontSize":"13px","overflow":"hidden","textOverflow":"ellipsis","whiteSpace":"nowrap"}),
                             html.Div(s.email or "",
-                                     style={"fontSize":"11px","color":"var(--muted)"}),
-                        ], style={"padding":"10px 0","borderBottom":"1px solid var(--border)"})
+                                     style={"fontSize":"11px","color":"var(--muted)","overflow":"hidden","textOverflow":"ellipsis","whiteSpace":"nowrap"}),
+                        ], style={"padding":"10px 0","borderBottom":"1px solid var(--border)","overflow":"hidden","minWidth":"0"})
                         for s in students
                     ] if students else [html.Div("Aucun etudiant.",
                                                  style={"color":"var(--muted)","padding":"16px",

@@ -888,3 +888,23 @@ div[style*="gap"],
 div[style*="margin-bottom"] {
   overflow: visible !important;
 }
+
+/* ── FIX DEBORDEMENT NOMS — listes étudiants ── */
+.sga-card * { box-sizing: border-box; }
+.sga-card { overflow: hidden; }
+.sga-card > div { max-width: 100%; }
+
+/* Texte long dans les listes */
+.sga-card [style*="fontWeight"] {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  max-width: 100% !important;
+}
+
+/* Fix colonne liste étudiants */
+[style*="width: 260px"],
+[style*="width:260px"] {
+  overflow: hidden !important;
+  min-width: 0 !important;
+}
