@@ -1,7 +1,6 @@
-﻿import dash
+import dash
 from dash import Dash, html, dcc, Input, Output
 import dash_bootstrap_components as dbc
-from database import init_db, init_users
 from components.sidebar import create_sidebar
 
 app = Dash(
@@ -13,6 +12,15 @@ app = Dash(
     update_title=None,
 )
 server = app.server
+
+# ── Init base de données au démarrage (Gunicorn + local) ──
+from database import init_db, init_users
+try:
+    init_db()
+    init_users()
+except Exception as _e:
+    print(f"Init DB warning: {_e}")
+
 
 import json as _json
 from flask import request as _request
@@ -126,7 +134,7 @@ def render_shell(path, session):
     if path in ROLE_ROUTES and ROLE_ROUTES[path] and role not in ROLE_ROUTES[path]:
         return html.Div([
             html.Div([
-                html.Div("", style={"fontSize":"64px","textAlign":"center","marginBottom":"16px"}),
+                html.Div("⛔", style={"fontSize":"64px","textAlign":"center","marginBottom":"16px"}),
                 html.Div("Accès non autorisé",
                          style={"fontFamily":"Times New Roman,serif","fontSize":"32px",
                                 "fontWeight":"700","textAlign":"center",
@@ -162,8 +170,6 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 8050))
     debug = os.environ.get("RAILWAY_ENVIRONMENT") is None
-    init_db()
-    init_users()
     import threading, webbrowser
     threading.Timer(1.5, lambda: webbrowser.open("http://127.0.0.1:8050/accueil")).start()
     app.run(debug=False)
