@@ -355,11 +355,12 @@ def render_detail(cl_id, r):
 def load_etu_sans_classe(cl_id, r):
     db = SessionLocal()
     try:
-        sans_classe = db.query(Student).filter(
-            Student.actif == True,
-            Student.classe_id == None
-        ).order_by(Student.nom).all()
-        return [{"label":f"{s.nom} {s.prenom}","value":s.id} for s in sans_classe]
+        # Charger tous les étudiants actifs qui ne sont PAS déjà dans cette classe
+        query = db.query(Student).filter(Student.actif == True)
+        if cl_id:
+            query = query.filter(Student.classe_id != cl_id)
+        etudiants = query.order_by(Student.nom).all()
+        return [{"label":f"{s.nom} {s.prenom}","value":s.id} for s in etudiants]
     finally:
         db.close()
 
