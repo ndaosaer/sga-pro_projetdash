@@ -50,7 +50,7 @@ def layout():
 
                 html.P(
                     "Fini les tableurs éparpillés et les cahiers d'appel perdus. "
-                    "SGA Pro centralise tout ce dont un enseignant a besoin — "
+                    "Nafa Scolaire centralise tout ce dont un enseignant a besoin — "
                     "en un seul endroit, en quelques secondes.",
                     className="lp-hero-sub"
                 ),
@@ -90,7 +90,7 @@ def layout():
                                         "background":"#FFBD2E"}),
                         html.Div(style={"width":"10px","height":"10px","borderRadius":"50%",
                                         "background":"#28CA41"}),
-                        html.Span("SGA Pro — Dashboard",
+                        html.Span("Nafa Scolaire — Dashboard",
                                   style={"marginLeft":"12px","fontSize":"11px",
                                          "color":"var(--muted)","fontFamily":"JetBrains Mono,monospace"}),
                     ], style={"display":"flex","alignItems":"center","gap":"6px",
@@ -146,7 +146,7 @@ def layout():
 
             html.Div([
                 html.Div([
-                    html.H3("✗  Avant SGA Pro", style={"color":"var(--red)","fontFamily":"Times New Roman,serif",
+                    html.H3("✗  Avant Nafa Scolaire", style={"color":"var(--red)","fontFamily":"Times New Roman,serif",
                             "fontSize":"22px","fontWeight":"700","marginBottom":"24px"}),
                     html.Ul([
                         html.Li(t) for t in [
@@ -161,7 +161,7 @@ def layout():
                 ], className="lp-ps-bad"),
 
                 html.Div([
-                    html.H3("✓  Avec SGA Pro", style={"color":"var(--green)","fontFamily":"Times New Roman,serif",
+                    html.H3("✓  Avec Nafa Scolaire", style={"color":"var(--green)","fontFamily":"Times New Roman,serif",
                             "fontSize":"22px","fontWeight":"700","marginBottom":"24px"}),
                     html.Ul([
                         html.Li(t) for t in [
@@ -187,15 +187,15 @@ def layout():
                    className="lp-section-lead"),
 
             html.Div([
-                _feat_card("", "Dashboard",         "Vue d'ensemble en temps réel. Moyennes, progressions, absences et alertes en un coup d'œil.", "Temps réel", "/"),
-                _feat_card("", "Appel Rapide",      "Cartes cliquables, validation en un clic. L'appel le plus rapide du marché, chronométré.", "Signature", "/appel"),
-                _feat_card("", "Bulletins PDF",     "Bulletins mis en page automatiquement. Export individuel ou ZIP pour toute la promotion.", "Automatisé", "/bulletin"),
-                _feat_card("", "Alertes",           "Détection auto des élèves en danger : absences, moyennes faibles, cours inactifs.", "Intelligent", "/alertes"),
-                _feat_card("", "Calendrier",        "Vue mensuelle des séances avec codes couleur. Planification directe depuis la grille.", "Visuel", "/calendrier"),
-                _feat_card("",  "Comparateur",      "Comparez deux cours ou deux étudiants côte à côte. Radar académique inclus.", "Exclusif", "/comparateur"),
-                _feat_card("", "Analytics",         "Violin plot, scatter, timeline, répartition des mentions. Niveau Enterprise en standard.", "Avancé", "/analytics"),
-                _feat_card("", "Fiches Étudiants",  "Profil académique complet, radar de compétences, historique et taux d'absence auto.", "Individuel", "/etudiants"),
-                _feat_card("", "Gestion des Cours", "Catalogue de matières, volume horaire, progression calculée en temps réel.", "Complet", "/cours"),
+                _feat_card("🏠", "Dashboard",         "Vue d'ensemble en temps réel. Moyennes, progressions, absences et alertes en un coup d'œil.", "Temps réel", "/"),
+                _feat_card("⚡", "Appel Rapide",      "Cartes cliquables, validation en un clic. L'appel le plus rapide du marché, chronométré.", "Signature", "/appel"),
+                _feat_card("📄", "Bulletins PDF",     "Bulletins mis en page automatiquement. Export individuel ou ZIP pour toute la promotion.", "Automatisé", "/bulletin"),
+                _feat_card("🔔", "Alertes",           "Détection auto des élèves en danger : absences, moyennes faibles, cours inactifs.", "Intelligent", "/alertes"),
+                _feat_card("📅", "Calendrier",        "Vue mensuelle des séances avec codes couleur. Planification directe depuis la grille.", "Visuel", "/calendrier"),
+                _feat_card("⚖",  "Comparateur",      "Comparez deux cours ou deux étudiants côte à côte. Radar académique inclus.", "Exclusif", "/comparateur"),
+                _feat_card("📊", "Analytics",         "Violin plot, scatter, timeline, répartition des mentions. Niveau Enterprise en standard.", "Avancé", "/analytics"),
+                _feat_card("🎓", "Fiches Étudiants",  "Profil académique complet, radar de compétences, historique et taux d'absence auto.", "Individuel", "/etudiants"),
+                _feat_card("📚", "Gestion des Cours", "Catalogue de matières, volume horaire, progression calculée en temps réel.", "Complet", "/cours"),
             ], className="lp-features-grid"),
         ], className="lp-section", id="features"),
 
@@ -278,7 +278,7 @@ def layout():
                 ]),
             ], className="lp-footer-grid"),
             html.Div([
-                html.Span("© 2026 SGA Pro — Tous droits réservés"),
+                html.Span("© 2026 Nafa Scolaire — Tous droits réservés"),
                 html.Span("Fait pour les enseignants du monde francophone ◆"),
             ], className="lp-footer-bottom"),
         ], className="lp-footer"),

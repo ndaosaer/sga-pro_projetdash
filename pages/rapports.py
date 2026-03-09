@@ -20,7 +20,7 @@ MOIS_FR = ["Janvier","Fevrier","Mars","Avril","Mai","Juin",
            "Juillet","Aout","Septembre","Octobre","Novembre","Decembre"]
 ANNEE   = "2025-2026"
 
-# Couleurs charte SGA Pro
+# Couleurs charte Nafa Scolaire
 OR      = colors.HexColor("#B8922A")
 DARK    = colors.HexColor("#1A1712")
 BEIGE   = colors.HexColor("#F5F0E6")
@@ -276,10 +276,10 @@ def envoyer_email(n, mois, annee, ecole, sections, dest, smtp, port, from_addr, 
         msg = MIMEMultipart()
         msg["From"]    = from_addr
         msg["To"]      = dest
-        msg["Subject"] = f"SGA Pro — Rapport mensuel {nom_mois} {annee}"
+        msg["Subject"] = f"Nafa Scolaire — Rapport mensuel {nom_mois} {annee}"
         msg.attach(MIMEText(
             f"Bonjour,\n\nVeuillez trouver ci-joint le rapport mensuel de {nom_mois} {annee} "
-            f"genere par SGA Pro.\n\nCordialement,\nSGA Pro", "plain"))
+            f"genere par Nafa Scolaire.\n\nCordialement,\nNafa Scolaire", "plain"))
 
         part = MIMEBase("application", "octet-stream")
         part.set_payload(pdf_bytes)
@@ -447,7 +447,7 @@ def _generer_pdf(mois, annee, ecole, sections):
     # ── PAGE DE GARDE ──
     elems += [
         Spacer(1, 3*cm),
-        Paragraph("SGA PRO", s_title),
+        Paragraph("Nafa Scolaire", s_title),
         Paragraph("Systeme de Gestion Academique", s_sub),
         Spacer(1, 0.5*cm),
         HRFlowable(width="100%", thickness=2, color=OR, spaceAfter=0.5*cm),
@@ -458,7 +458,7 @@ def _generer_pdf(mois, annee, ecole, sections):
         HRFlowable(width="100%", thickness=1, color=BORDURE, spaceAfter=1*cm),
         Paragraph(ecole, ParagraphStyle("ecole", fontSize=14, textColor=GRIS,
                   fontName="Helvetica", alignment=TA_CENTER, spaceAfter=8)),
-        Paragraph(f"Genere le {date.today().strftime('%d/%m/%Y')} par SGA Pro",
+        Paragraph(f"Genere le {date.today().strftime('%d/%m/%Y')} par Nafa Scolaire",
                   ParagraphStyle("gen", fontSize=10, textColor=GRIS,
                   fontName="Helvetica", alignment=TA_CENTER)),
         Spacer(1, 2*cm),
@@ -661,7 +661,7 @@ def _generer_pdf(mois, annee, ecole, sections):
     elems += [
         Spacer(1, 1*cm),
         HRFlowable(width="100%", thickness=1, color=BORDURE),
-        Paragraph(f"SGA Pro — {ecole} — Rapport {nom_mois} {annee} — Confidentiel",
+        Paragraph(f"Nafa Scolaire — {ecole} — Rapport {nom_mois} {annee} — Confidentiel",
                   ParagraphStyle("footer", fontSize=8, textColor=GRIS,
                   fontName="Helvetica", alignment=TA_CENTER, spaceBefore=8)),
     ]

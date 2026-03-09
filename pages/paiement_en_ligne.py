@@ -1,5 +1,5 @@
 """
-SGA Pro — Module Paiement Paytech
+Nafa Scolaire — Module Paiement Paytech
 Intègre Wave, Orange Money, Free Money, Carte bancaire
 via l'agrégateur Paytech (paytech.sn)
 """
@@ -270,11 +270,11 @@ def lancer_paiement(n, type_pay, montant, nom, prenom, email, tel):
 
     # Payload Paytech
     payload = {
-        "item_name":    labels.get(type_pay, "Paiement SGA Pro"),
+        "item_name":    labels.get(type_pay, "Paiement Nafa Scolaire"),
         "item_price":   str(int(montant)),
         "currency":     "XOF",
         "ref_command":  ref,
-        "command_name": f"SGA Pro — {labels.get(type_pay,'')}",
+        "command_name": f"Nafa Scolaire — {labels.get(type_pay,'')}",
         "env":          PAYTECH_ENV,
         "ipn_url":      os.environ.get("APP_URL","http://localhost:8050") + "/webhook/paytech",
         "success_url":  os.environ.get("APP_URL","http://localhost:8050") + "/paiement-succes",

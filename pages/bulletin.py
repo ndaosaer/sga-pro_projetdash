@@ -51,7 +51,7 @@ def layout():
                                             "fontSize":"14px","padding":"10px",
                                             "resize":"vertical"}),
                     ], style={"marginBottom":"20px"}),
-                    html.Button(" Générer le bulletin PDF", id="btn-gen-bull",
+                    html.Button("📄 Générer le bulletin PDF", id="btn-gen-bull",
                                 className="btn-sga btn-gold",
                                 style={"width":"100%","justifyContent":"center",
                                        "fontSize":"13px","padding":"14px"}),
@@ -65,7 +65,7 @@ def layout():
                              style={"marginBottom":"16px"}),
                     html.Div("Génère un fichier ZIP avec les bulletins de tous les étudiants.",
                              style={"color":"var(--muted)","fontSize":"13px","marginBottom":"16px"}),
-                    html.Button(" Générer tous les bulletins", id="btn-gen-all",
+                    html.Button("📦 Générer tous les bulletins", id="btn-gen-all",
                                 className="btn-sga btn-green",
                                 style={"width":"100%","justifyContent":"center","fontSize":"13px"}),
                     dcc.Download(id="dl-all-bulletins"),
@@ -190,7 +190,7 @@ def _generer_pdf(data, periode, appre):
         elems = []
 
         # ── EN-TÊTE ──────────────────────────────────────────────────────────
-        elems.append(Paragraph("SGA PRO", S_titre))
+        elems.append(Paragraph("Nafa Scolaire", S_titre))
         elems.append(Paragraph("SYSTÈME DE GESTION ACADÉMIQUE", S_sub))
         elems.append(HRFlowable(width="100%", thickness=0.5,
                                 color=OR, spaceAfter=12))
@@ -296,7 +296,7 @@ def _generer_pdf(data, periode, appre):
         elems.append(HRFlowable(width="100%", thickness=0.5,
                                 color=OR, spaceBefore=20, spaceAfter=8))
         elems.append(Paragraph(
-            f"Document généré automatiquement par SGA Pro · {date.today().strftime('%d/%m/%Y')}",
+            f"Document généré automatiquement par Nafa Scolaire · {date.today().strftime('%d/%m/%Y')}",
             style("footer", fontName="Helvetica", fontSize=8,
                   textColor=MUTED, alignment=TA_CENTER)))
 
@@ -344,7 +344,7 @@ def apercu(sid, periode):
     return html.Div([
         # En-tête aperçu
         html.Div([
-            html.Div("SGA PRO", style={"fontFamily":"Times New Roman,serif","fontSize":"24px",
+            html.Div("Nafa Scolaire", style={"fontFamily":"Times New Roman,serif","fontSize":"24px",
                                         "fontWeight":"700","color":"var(--gold)","letterSpacing":"5px"}),
             html.Div(periode or "", style={"color":"var(--muted)","fontSize":"11px",
                                            "letterSpacing":"2px","marginTop":"4px"}),

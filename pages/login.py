@@ -9,7 +9,7 @@ dash.register_page(__name__, path="/login", name="Login")
 def layout():
     return html.Div([
         html.Div([
-            html.Div("SGA PRO", className="login-title"),
+            html.Div("Nafa Scolaire", className="login-title"),
             html.Div("Systeme de Gestion Academique", className="login-subtitle"),
             html.Div([
                 html.Span("Identifiant", className="sga-label"),

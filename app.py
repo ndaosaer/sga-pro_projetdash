@@ -8,7 +8,7 @@ app = Dash(
     use_pages=True,
     external_stylesheets=[dbc.themes.BOOTSTRAP],
     suppress_callback_exceptions=True,
-    title="SGA Pro",
+    title="Nafa Scolaire",
     update_title=None,
 )
 server = app.server

@@ -1,5 +1,5 @@
 """
-SGA Pro — Webhook Paytech + pages succès/annulation
+Nafa Scolaire — Webhook Paytech + pages succès/annulation
 """
 import dash, json
 from dash import html, dcc
