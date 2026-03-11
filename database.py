@@ -52,8 +52,10 @@ def _seed_default_data():
                 u.linked_id     = linked_id
                 db.add(u)
 
-        add_user("admin",      "admin123", "admin")
-        add_user("secretaire", "sec123",   "secretary")
+        add_user("admin",        "admin123",  "admin")
+        add_user("secretaire",   "sec123",    "secretary")
+        add_user("demo.parent",  "parent123", "parent")
+        add_user("demo.etudiant","etu2026",   "student")
         db.commit()
 
         # ── Niveaux ──
@@ -274,11 +276,11 @@ def init_users():
     try:
         if db.query(User).count() == 0:
             defaults = [
-                ("admin",     "admin123",     "admin",     None),
-                ("enseignant","teach123",     "teacher",   None),
-                ("secretaire","secr123",      "secretary", None),
-                ("etudiant",  "etu123",       "student",   None),
-                ("parent",    "parent123",    "parent",    None),
+                ("admin",         "admin123",  "admin",     None),
+                ("secretaire",    "sec123",    "secretary", None),
+                ("demo.parent",   "parent123", "parent",    None),
+                ("demo.etudiant", "etu2026",   "student",   None),
+                ("prof.diallo",   "prof2026",  "teacher",   None),
             ]
             for username, pwd, role, linked_id in defaults:
                 u = User()

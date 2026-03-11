@@ -8,21 +8,19 @@ from datetime import datetime
 dash.register_page(__name__, path="/auth", name="Connexion")
 
 ROLES = [
-    ("admin",     "", "Directeur"),
-    ("teacher",   "", "Enseignant"),
-    ("student",   "", "Etudiant"),
-    ("parent",    "", "Parent"),
-    ("secretary", "", "Secretaire"),
+    ("admin",     "◈", "Directeur"),
+    ("teacher",   "◉", "Enseignant"),
+    ("student",   "◆", "Etudiant"),
+    ("parent",    "◎", "Parent"),
+    ("secretary", "▣", "Secretaire"),
 ]
 
 def layout():
     return html.Div([
         html.Div([
             # Logo
-            html.Div([
-                html.Span("SGA", style={"color":"var(--gold)"}), " PRO",
-            ], className="login-title"),
-            html.Div("Systeme de Gestion Academique", className="login-subtitle"),
+            html.Div("Nafa Scolaire", className="login-title"),
+            html.Div("Système de Gestion Académique", className="login-subtitle"),
 
             # Onglets
             html.Div([
@@ -46,7 +44,7 @@ def layout():
                     style={"flex":"1","padding":"10px 4px","cursor":"pointer",
                            "background":"var(--bg-primary)","border":"1px solid var(--border)",
                            "borderRadius":"4px","color":"var(--muted)",
-                           "fontFamily":"JetBrains Mono,monospace","textAlign":"center",
+                           "fontFamily":"Plus Jakarta Sans,sans-serif","textAlign":"center",
                            "display":"flex","flexDirection":"column","alignItems":"center",
                            "transition":"all 0.2s","fontSize":"12px"})
                     for role, icon, label in ROLES
@@ -76,29 +74,33 @@ def layout():
 
                 # Comptes démo
                 html.Div([
-                    html.Div("Comptes demo :", style={"fontSize":"10px","color":"var(--muted)",
+                    html.Div("Comptes démo :", style={"fontSize":"10px","color":"var(--muted)",
                              "marginBottom":"8px","letterSpacing":"1px","fontWeight":"600",
                              "textTransform":"uppercase"}),
                     *[html.Div([
-                        html.Span(idf, style={"fontFamily":"JetBrains Mono,monospace",
-                                              "fontWeight":"700","color":"var(--gold)",
-                                              "fontSize":"12px","minWidth":"90px",
+                        html.Span(idf, style={"fontFamily":"monospace",
+                                              "fontWeight":"700","color":"var(--em)",
+                                              "fontSize":"12px","minWidth":"130px",
                                               "display":"inline-block"}),
-                        html.Span(" / " + pwd, style={"fontFamily":"JetBrains Mono,monospace",
+                        html.Span(" / " + pwd, style={"fontFamily":"monospace",
                                                        "fontSize":"12px","color":"var(--text-primary)",
                                                        "marginRight":"8px"}),
                         html.Span(lbl, style={"fontSize":"10px","color":"var(--muted)"}),
                     ], style={"marginBottom":"4px"})
                     for idf, pwd, lbl in [
-                        ("admin",      "admin123",  "Directeur"),
-                        ("enseignant", "teach123",  "Enseignant"),
-                        ("secretaire", "secr123",   "Secretaire"),
-                        ("etudiant",   "etu123",    "Etudiant"),
-                        ("parent",     "parent123", "Parent"),
+                        ("admin",       "admin123",  "Directeur"),
+                        ("prof.diallo", "prof2026",  "Enseignant"),
+                        ("secretaire",  "sec123",    "Secrétaire"),
+                        ("demo.parent", "parent123", "Parent"),
+                        ("demo.etudiant","etu2026",  "Étudiant"),
                     ]],
+                    html.Div("→ Enseignants : prof.fall, prof.ba, prof.sow… / prof2026",
+                             style={"fontSize":"10px","color":"var(--muted)","marginTop":"6px","fontStyle":"italic"}),
+                    html.Div("→ Étudiants : prenom.nom / etu2026",
+                             style={"fontSize":"10px","color":"var(--muted)","fontStyle":"italic"}),
                 ], style={"marginTop":"16px","padding":"14px",
-                          "background":"var(--bg-secondary)",
-                          "borderRadius":"4px","border":"1px solid var(--border)"}),
+                          "background":"var(--em-xpale)",
+                          "borderRadius":"8px","border":"1px solid rgba(14,102,85,0.15)"}),
 
             ], id="panel-login", style={"display":"block"}),
 
@@ -192,9 +194,9 @@ def select_role(*args):
     for r in roles:
         if r == selected:
             styles.append({"flex":"1","padding":"10px 4px","cursor":"pointer",
-                           "background":"rgba(184,146,42,0.15)",
-                           "border":"2px solid var(--gold)","borderRadius":"4px",
-                           "color":"var(--gold)","fontFamily":"JetBrains Mono,monospace",
+                           "background":"rgba(14,102,85,0.12)",
+                           "border":"2px solid var(--em)","borderRadius":"4px",
+                           "color":"var(--em)","fontFamily":"Plus Jakarta Sans,sans-serif",
                            "textAlign":"center","display":"flex","flexDirection":"column",
                            "alignItems":"center","fontWeight":"700","transition":"all 0.2s",
                            "fontSize":"12px"})
@@ -202,7 +204,7 @@ def select_role(*args):
             styles.append({"flex":"1","padding":"10px 4px","cursor":"pointer",
                            "background":"var(--bg-primary)","border":"1px solid var(--border)",
                            "borderRadius":"4px","color":"var(--muted)",
-                           "fontFamily":"JetBrains Mono,monospace","textAlign":"center",
+                           "fontFamily":"Plus Jakarta Sans,sans-serif","textAlign":"center",
                            "display":"flex","flexDirection":"column","alignItems":"center",
                            "transition":"all 0.2s","fontSize":"12px"})
     return *styles, selected
