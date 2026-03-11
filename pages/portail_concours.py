@@ -35,9 +35,9 @@ def layout():
         # NAVBAR
         html.Div([
             html.Div([
-                html.Span("SGA", style={"color":"var(--gold)","fontFamily":"Times New Roman,serif",
-                    "fontSize":"22px","fontWeight":"700","letterSpacing":"4px"}),
-                html.Span(" PRO", style={"fontFamily":"Times New Roman,serif",
+                html.Span("Nafa", style={"color":"var(--em)","fontFamily":"Instrument Serif,serif",
+                    "fontSize":"22px","fontWeight":"400"}),
+                html.Span(" Scolaire", style={"fontFamily":"Instrument Serif,serif",
                     "fontSize":"22px","fontStyle":"italic"}),
                 html.Span(" — Concours", style={"fontSize":"13px","color":"var(--muted)",
                     "marginLeft":"12px","letterSpacing":"2px"}),
@@ -517,13 +517,13 @@ def soumettre(n, nom, prenom, email, tel, ddn, nat, niveau, etab, filiere):
 
                     # Badges moyens de paiement
                     html.Div([
-                        html.Span(" Wave", style={"padding":"6px 12px","background":"rgba(184,146,42,0.1)",
+                        html.Span("🌊 Wave", style={"padding":"6px 12px","background":"rgba(184,146,42,0.1)",
                             "border":"1px solid var(--border)","borderRadius":"4px","fontSize":"12px","marginRight":"8px"}),
-                        html.Span(" Orange Money", style={"padding":"6px 12px","background":"rgba(184,146,42,0.1)",
+                        html.Span("🟠 Orange Money", style={"padding":"6px 12px","background":"rgba(184,146,42,0.1)",
                             "border":"1px solid var(--border)","borderRadius":"4px","fontSize":"12px","marginRight":"8px"}),
-                        html.Span(" Free Money", style={"padding":"6px 12px","background":"rgba(184,146,42,0.1)",
+                        html.Span("🔵 Free Money", style={"padding":"6px 12px","background":"rgba(184,146,42,0.1)",
                             "border":"1px solid var(--border)","borderRadius":"4px","fontSize":"12px","marginRight":"8px"}),
-                        html.Span(" Carte", style={"padding":"6px 12px","background":"rgba(184,146,42,0.1)",
+                        html.Span("💳 Carte", style={"padding":"6px 12px","background":"rgba(184,146,42,0.1)",
                             "border":"1px solid var(--border)","borderRadius":"4px","fontSize":"12px"}),
                     ], style={"marginBottom":"20px","flexWrap":"wrap","display":"flex","gap":"6px"}),
 
