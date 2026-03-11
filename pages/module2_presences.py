@@ -2,7 +2,7 @@ import dash
 from dash import html, dcc, Input, Output, State, callback, ALL
 import plotly.graph_objects as go
 from database import SessionLocal
-from models import Course, Session, Student, Attendance
+from models import Classe, Course, Session, Student, Attendance
 from datetime import date
 
 dash.register_page(__name__, path="/presences", name="Presences")
@@ -11,7 +11,12 @@ def layout():
     db = SessionLocal()
     opts = [{"label":f"{c.code} - {c.libelle}","value":c.code} for c in db.query(Course).all()]
     db.close()
+    db2 = SessionLocal()
+    classes = db2.query(Classe).filter_by(actif=True).order_by(Classe.nom).all()
+    classe_opts = [{"label": c.nom, "value": c.id} for c in classes]
+    db2.close()
     return html.Div([
+        dcc.Store(id="pres-classe-opts", data=classe_opts),
         html.Div([
             html.Div([html.Div("Cahier de Texte & Presences", className="page-title"),
                       html.Div("Enregistrement des seances - Appel numerique", className="page-subtitle")]),
@@ -22,7 +27,10 @@ def layout():
                 html.Div("Nouvelle seance", className="sga-card-title", style={"marginBottom":"20px"}),
                 html.Div([
                     html.Div([html.Span("Cours", className="sga-label"),
-                              dcc.Dropdown(id="dd-cp", options=opts, placeholder="Selectionner un cours")]),
+                              dcc.Dropdown(id="dd-cp", options=opts, placeholder="Selectionner un cours")
+                          ]),
+                          html.Div([html.Label("Classe", style={"fontSize":"12px","color":"var(--muted)","marginBottom":"4px"}),
+                          dcc.Dropdown(id="dd-classe-pres", placeholder="Toutes les classes", clearable=True)]),
                     html.Div([html.Span("Date", className="sga-label"),
                               dcc.DatePickerSingle(id="dp-date", date=str(date.today()), display_format="DD/MM/YYYY")]),
                     html.Div([html.Span("Duree (h)", className="sga-label"),
@@ -58,6 +66,11 @@ def layout():
 
         dcc.Interval(id="iv-pres", interval=3000, max_intervals=1),
     ])
+
+
+@callback(Output("dd-classe-pres","options"), Input("pres-classe-opts","data"))
+def load_classe_opts_pres(data): return data or []
+
 
 @callback(Output("zone-appel","children"), Input("dd-cp","value"))
 def gen_checklist(code):
@@ -100,6 +113,27 @@ def save_sess(n,code,dv,dur,theme,abs_lists):
         db.add(sess); db.flush()
         for sid in absents: db.add(Attendance(id_session=sess.id, id_student=sid))
         db.commit()
+
+        # ── Notifications push automatiques ──────────────────────────────
+        try:
+            from notif_service import push_absence
+            from models import Session as _Sess, Attendance as _Att
+            db2 = SessionLocal()
+            all_sess = db2.query(_Sess).filter_by(course_code=code).all()
+            nb_sess  = len(all_sess)
+            sess_ids = {s.id for s in all_sess}
+            for sid in absents:
+                nb_abs = db2.query(_Att).filter(
+                    _Att.id_student == sid,
+                    _Att.id_session.in_(sess_ids)
+                ).count()
+                taux = round(nb_abs / nb_sess * 100, 1) if nb_sess else 0
+                if taux > 20:
+                    push_absence(sid, code, nb_abs, nb_sess, taux)
+            db2.close()
+        except Exception:
+            pass  # Ne pas bloquer l'enregistrement si notif échoue
+
         msg = html.Div(f"{len(absents)} absent(s) enregistre(s).", className="sga-alert sga-alert-success")
     except Exception as e:
         db.rollback(); msg = html.Div(str(e), className="sga-alert sga-alert-danger")

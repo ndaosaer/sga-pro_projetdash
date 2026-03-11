@@ -80,7 +80,11 @@ def create_sidebar(role="admin", username=""):
     init_db()
     db = SessionLocal()
     try:
-        nb_notifs = db.query(Notification).filter_by(lu=False).count()
+        nb_notifs = db.query(Notification).filter(
+            Notification.lu == False,
+            (Notification.destinataire.in_(["admin","secretary","all"])) |
+            (Notification.destinataire == None)
+        ).count()
     except Exception:
         nb_notifs = 0
     finally:

@@ -24,6 +24,18 @@ def init_db():
             conn.commit()
     except Exception:
         pass
+    # Migration notifications — nouvelles colonnes
+    for col_sql in [
+        "ALTER TABLE notifications ADD COLUMN student_id INTEGER",
+        "ALTER TABLE notifications ADD COLUMN destinataire TEXT",
+        "ALTER TABLE notifications ADD COLUMN categorie TEXT",
+    ]:
+        try:
+            with engine.connect() as conn:
+                conn.execute(text(col_sql))
+                conn.commit()
+        except Exception:
+            pass
     _seed_default_data()
     print("Base de donnees initialisee.")
 

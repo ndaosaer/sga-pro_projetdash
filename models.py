@@ -78,12 +78,17 @@ class Grade(Base):
 
 class Notification(Base):
     __tablename__ = "notifications"
-    id         = Column(Integer, primary_key=True, autoincrement=True)
-    type       = Column(String(50), nullable=False)
-    titre      = Column(String(200), nullable=False)
-    message    = Column(Text, nullable=False)
-    lu         = Column(Boolean, default=False)
-    created_at = Column(DateTime)
+    id           = Column(Integer, primary_key=True, autoincrement=True)
+    type         = Column(String(50), nullable=False)   # danger / warning / info / success
+    titre        = Column(String(200), nullable=False)
+    message      = Column(Text, nullable=False)
+    lu           = Column(Boolean, default=False)
+    created_at   = Column(DateTime)
+    # Destinataires ciblés
+    student_id   = Column(Integer, ForeignKey("students.id", ondelete="CASCADE"), nullable=True)
+    destinataire = Column(String(50), nullable=True)   # "parent", "secretary", "admin", "all"
+    categorie    = Column(String(50), nullable=True)   # "absence", "note", "paiement", "info"
+    student      = relationship("Student", lazy="select", foreign_keys=[student_id])
 
 
 # ═══════════════════════════════════════════════
