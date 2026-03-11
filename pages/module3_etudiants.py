@@ -15,9 +15,15 @@ def layout():
     return html.Div([
         dcc.Store(id='etu-classe-opts', data=classe_opts_e),
         html.Div([
-            html.Div([html.Div("Gestion des Etudiants", className="page-title"),
-                      html.Div("Fiches individuelles - Notes - Import/Export", className="page-subtitle")]),
+            html.Div([html.Div("Gestion des Étudiants", className="page-title"),
+                      html.Div("Fiches individuelles · Notes · Migration Excel → SQL", className="page-subtitle")]),
         ], className="topbar"),
+
+        html.Div([
+            html.Button("👨\u200d🎓  Promotion",       id="etu-tab-liste",  n_clicks=0, className="btn-sga btn-gold", style={"fontWeight":"700"}),
+            html.Button("📥  Migration Excel", id="etu-tab-import", n_clicks=0, className="btn-sga"),
+            html.Button("📊  Notes & Export",  id="etu-tab-notes",  n_clicks=0, className="btn-sga"),
+        ], style={"display":"flex","gap":"8px","marginBottom":"20px"}),
 
         html.Div([
             html.Div([
@@ -26,8 +32,35 @@ def layout():
                 dcc.Interval(id="iv-stu", interval=3000, max_intervals=1),
             ], className="sga-card", style={"width":"260px","minWidth":"0","flexShrink":"0","overflowY":"auto","overflowX":"hidden","maxHeight":"78vh"}),
             html.Div(id="fiche-detail", style={"flex":"1"}),
-        ], style={"display":"flex","gap":"20px","marginBottom":"24px"}),
+        ], id="etu-panel-liste", style={"display":"flex","gap":"20px","marginBottom":"24px"}),
 
+        html.Div([
+            html.Div([
+                html.Div("📥 Migration Excel → SQL", className="sga-card-title", style={"marginBottom":"6px"}),
+                html.Div("Importez vos listes depuis Excel directement en base de données.", style={"fontSize":"12px","color":"var(--text-muted)","marginBottom":"20px"}),
+                html.Div("Format attendu :", className="sga-label"),
+                html.Div([
+                    *[html.Span(col, style={"padding":"4px 12px","background":"var(--em-pale)","color":"var(--em)","borderRadius":"20px","fontSize":"11px","fontWeight":"600","border":"1px solid rgba(14,102,85,0.2)"})
+                      for col in ["Nom*","Prenom*","Email","Date_Naissance","Classe_Code","Telephone"]],
+                    html.Span("* obligatoires", style={"fontSize":"10px","color":"var(--muted)"}),
+                ], style={"display":"flex","flexWrap":"wrap","gap":"8px","marginBottom":"20px"}),
+                html.Div([
+                    html.Div([html.Span("Classe par défaut", className="sga-label"),
+                              dcc.Dropdown(id="dd-import-classe", options=classe_opts_e, placeholder="Si colonne Classe_Code absente...", clearable=True)], style={"flex":"1"}),
+                    html.Div([html.Span("Mot de passe par défaut", className="sga-label"),
+                              dcc.Input(id="inp-import-pwd", value="etu2026", className="sga-input", placeholder="etu2026", style={"width":"100%"})], style={"flex":"1"}),
+                ], style={"display":"flex","gap":"16px","marginBottom":"20px"}),
+                dcc.Upload(id="upload-etudiants",
+                    children=html.Div([html.Div("📁", style={"fontSize":"32px","marginBottom":"8px"}),
+                        html.Div("Glisser-déposer votre fichier Excel ici"),
+                        html.A("parcourir", style={"color":"var(--em)","fontWeight":"700"}),
+                        html.Div(".xlsx, .xls, .csv acceptés", style={"fontSize":"11px","color":"var(--muted)","marginTop":"6px"})], style={"textAlign":"center"}),
+                    className="upload-zone", style={"marginBottom":"16px","padding":"32px"}),
+                html.Div(id="fb-import-etu"),
+            ], className="sga-card"),
+        ], id="etu-panel-import", style={"display":"none"}),
+
+        html.Div([
         html.Div([
             html.Div([
                 html.Div("Import / Export des Notes", className="sga-card-title", style={"marginBottom":"20px"}),
@@ -52,6 +85,8 @@ def layout():
             ], className="sga-card"),
         ]),
     ])
+        ], id="etu-panel-notes", style={"display":"none"}),
+
 
 
 @callback(Output("dd-classe-etu","options"), Input("etu-classe-opts","data"))
@@ -240,3 +275,185 @@ def upload(contents, fname, code):
         return html.Div(f"{updated} note(s) importee(s).", className="sga-alert sga-alert-success")
     except Exception as e:
         return html.Div(str(e), className="sga-alert sga-alert-danger")
+
+
+# ── Switcher onglets étudiants ─────────────────────────────────────────────────
+from dash import ctx as dctx
+
+@callback(
+    Output("etu-panel-liste",  "style"),
+    Output("etu-panel-import", "style"),
+    Output("etu-panel-notes",  "style"),
+    Output("etu-tab-liste",    "className"),
+    Output("etu-tab-import",   "className"),
+    Output("etu-tab-notes",    "className"),
+    Input("etu-tab-liste",  "n_clicks"),
+    Input("etu-tab-import", "n_clicks"),
+    Input("etu-tab-notes",  "n_clicks"),
+    prevent_initial_call=True,
+)
+def switch_etu_tab(n_l, n_i, n_n):
+    show_flex = {"display":"flex","gap":"20px","marginBottom":"24px"}
+    show_blk  = {"display":"block"}
+    hide      = {"display":"none"}
+    active    = "btn-sga btn-gold"
+    normal    = "btn-sga"
+    tid = dctx.triggered_id
+    if tid == "etu-tab-import":
+        return hide, show_blk, hide, normal, active, normal
+    if tid == "etu-tab-notes":
+        return hide, hide, show_blk, normal, normal, active
+    # défaut : liste
+    return show_flex, hide, hide, active, normal, normal
+
+
+# ── Import Excel → SQL étudiants ──────────────────────────────────────────────
+@callback(
+    Output("fb-import-etu", "children"),
+    Input("upload-etudiants", "contents"),
+    State("upload-etudiants", "filename"),
+    State("dd-import-classe",  "value"),
+    State("inp-import-pwd",    "value"),
+    prevent_initial_call=True,
+)
+def import_etudiants_excel(contents, fname, default_classe_id, default_pwd):
+    if not contents:
+        return dash.no_update
+
+    from werkzeug.security import generate_password_hash
+    from models import User
+    from datetime import datetime, date
+
+    try:
+        _, cs = contents.split(",")
+        raw = base64.b64decode(cs)
+
+        # Lire selon format
+        if fname and fname.lower().endswith(".csv"):
+            df = pd.read_csv(io.StringIO(raw.decode("utf-8", errors="replace")))
+        else:
+            df = pd.read_excel(io.BytesIO(raw))
+
+        # Normaliser les colonnes (insensible à la casse)
+        df.columns = [c.strip().lower().replace(" ","_") for c in df.columns]
+        col_map = {
+            "nom":       ["nom","last_name","lastname","name"],
+            "prenom":    ["prenom","prénom","first_name","firstname","prenom"],
+            "email":     ["email","mail","courriel","e-mail"],
+            "dob":       ["date_naissance","dob","date_de_naissance","birth_date","naissance"],
+            "classe":    ["classe_code","classe","class","niveau","class_code"],
+            "telephone": ["telephone","téléphone","tel","phone","mobile"],
+        }
+        def find_col(df, keys):
+            for k in keys:
+                if k in df.columns: return k
+            return None
+
+        c_nom    = find_col(df, col_map["nom"])
+        c_prenom = find_col(df, col_map["prenom"])
+        c_email  = find_col(df, col_map["email"])
+        c_dob    = find_col(df, col_map["dob"])
+        c_classe = find_col(df, col_map["classe"])
+        c_tel    = find_col(df, col_map["telephone"])
+
+        if not c_nom or not c_prenom:
+            return html.Div(
+                f"❌ Colonnes 'Nom' et 'Prénom' introuvables. Colonnes détectées : {', '.join(df.columns.tolist())}",
+                className="sga-alert sga-alert-danger")
+
+        db = SessionLocal()
+
+        # Construire index des classes
+        from models import Classe
+        classes_by_code = {cl.code.upper(): cl.id for cl in db.query(Classe).all()}
+        classes_by_id   = {cl.id: cl.id for cl in db.query(Classe).all()}
+
+        pwd_hash = generate_password_hash(default_pwd or "etu2026")
+        imported = 0; skipped = 0; errors = []
+
+        for idx, row in df.iterrows():
+            try:
+                nom    = str(row[c_nom]).strip().upper()
+                prenom = str(row[c_prenom]).strip().title()
+                if not nom or not prenom or nom == "NAN": continue
+
+                email = str(row[c_email]).strip() if c_email and not pd.isna(row.get(c_email,"")) else f"{prenom.lower().replace(' ','.')}.{nom.lower().replace(' ','.')}@ecole.sn"
+
+                # Classe
+                classe_id = default_classe_id
+                if c_classe and not pd.isna(row.get(c_classe,"")):
+                    code = str(row[c_classe]).strip().upper()
+                    if code in classes_by_code:
+                        classe_id = classes_by_code[code]
+
+                # Date naissance
+                dob = None
+                if c_dob and not pd.isna(row.get(c_dob,"")):
+                    try:
+                        dob = pd.to_datetime(row[c_dob]).date()
+                    except Exception:
+                        pass
+
+                # Vérifier doublon
+                existing = db.query(Student).filter(
+                    Student.nom == nom, Student.prenom == prenom
+                ).first()
+                if existing:
+                    skipped += 1
+                    continue
+
+                # Créer étudiant
+                stu = Student()
+                stu.nom            = nom
+                stu.prenom         = prenom
+                stu.email          = email
+                stu.date_naissance = dob
+                stu.classe_id      = classe_id
+                stu.actif          = True
+                stu.created_at     = datetime.now()
+                db.add(stu)
+                db.flush()
+
+                # Créer compte utilisateur
+                uname = f"{prenom.lower().replace(' ','').replace('é','e').replace('è','e').replace('ê','e')}.{nom.lower().replace(' ','')}"
+                # Éviter doublons username
+                suffix = 1
+                base_uname = uname
+                while db.query(User).filter_by(username=uname).first():
+                    uname = f"{base_uname}{suffix}"
+                    suffix += 1
+
+                u = User()
+                u.username      = uname
+                u.password_hash = pwd_hash
+                u.role          = "student"
+                u.linked_id     = stu.id
+                u.created_at    = datetime.now()
+                db.add(u)
+
+                imported += 1
+
+            except Exception as e:
+                errors.append(f"Ligne {idx+2} : {str(e)}")
+
+        db.commit()
+        db.close()
+
+        items = [
+            html.Div(f"✅ {imported} étudiant(s) importé(s) avec succès.",
+                     className="sga-alert sga-alert-success"),
+        ]
+        if skipped:
+            items.append(html.Div(f"⚠ {skipped} doublon(s) ignoré(s) (nom+prénom déjà existant).",
+                                  className="sga-alert sga-alert-warning"))
+        if errors:
+            items.append(html.Div([
+                html.Div(f"❌ {len(errors)} erreur(s) :", className="sga-alert sga-alert-danger"),
+                html.Ul([html.Li(e, style={"fontSize":"11px"}) for e in errors[:10]]),
+            ]))
+
+        return html.Div(items)
+
+    except Exception as e:
+        return html.Div(f"❌ Erreur de lecture du fichier : {str(e)}",
+                        className="sga-alert sga-alert-danger")
