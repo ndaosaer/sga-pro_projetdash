@@ -37,7 +37,7 @@ def _detecter_alertes():
                         "titre":   f"Cours inactif — {course.code}",
                         "detail":  f"Aucune séance depuis {jours} jours ({last_date.strftime('%d/%m/%Y')})",
                         "cours":   course.libelle,
-                        "icone":   "⏸",
+                        "icone":   "",
                     })
 
             if nb_sess == 0:
@@ -65,7 +65,7 @@ def _detecter_alertes():
                         "titre":   f"{student.nom} {student.prenom} — {course.code}",
                         "detail":  f"Taux d'absence : {taux}% ({nb_abs}/{nb_sess} séances)",
                         "cours":   course.libelle,
-                        "icone":   "" if taux > 30 else "",
+                        "icone":   "",
                     })
 
                 # ── ALERTE 2 : Moyenne en danger ────────────────────────────
@@ -76,7 +76,7 @@ def _detecter_alertes():
                         "titre":   f"{student.nom} {student.prenom} — {course.code}",
                         "detail":  f"Moyenne : {moy}/20 (seuil minimum : {SEUIL_MOYENNE}/20)",
                         "cours":   course.libelle,
-                        "icone":   "" if moy < 8 else "",
+                        "icone":   "",
                     })
 
     finally:
@@ -112,7 +112,7 @@ def layout():
                 html.Div("Alertes Intelligentes", className="page-title"),
                 html.Div("Surveillance automatique de la promotion", className="page-subtitle"),
             ]),
-            html.Button(" Actualiser", id="btn-refresh-alertes",
+            html.Button("Actualiser", id="btn-refresh-alertes",
                         className="btn-sga btn-gold"),
         ], className="topbar"),
 
@@ -221,8 +221,8 @@ def afficher_alertes(_, __, seuils):
     else:
         # Grouper par type
         sections = [
-            ("absence", " Absences excessives",      "var(--red)"),
-            ("moyenne", " Moyennes insuffisantes",    "var(--copper)"),
+            ("absence", "🚨 Absences excessives",      "var(--red)"),
+            ("moyenne", "📉 Moyennes insuffisantes",    "var(--copper)"),
             ("inactif", "⏸ Cours inactifs",             "var(--gold)"),
         ]
         blocs = []

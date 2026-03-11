@@ -46,11 +46,16 @@ def layout():
             html.Div(id="pay-content"),
         ], style={"padding":"24px"}),
 
-        # ── Modal : configurer frais pour un etudiant ──
+        # ── Panneau inline : configurer frais ──
         html.Div([
             html.Div([
-                html.Div("Configurer les frais de scolarite", className="sga-card-title",
-                         style={"marginBottom":"20px"}),
+                html.Div([
+                    html.Div("Configurer les frais de scolarite", className="sga-card-title"),
+                    html.Button("Fermer", id="btn-cfg-cancel", n_clicks=0,
+                                style={"background":"none","border":"none","fontSize":"20px",
+                                       "cursor":"pointer","color":"var(--muted)","lineHeight":"1"}),
+                ], style={"display":"flex","justifyContent":"space-between",
+                          "alignItems":"center","marginBottom":"20px"}),
                 html.Div("Etudiant", className="sga-label"),
                 dcc.Dropdown(id="cfg-student", placeholder="Selectionner un etudiant...",
                              style={"marginBottom":"14px"}),
@@ -73,20 +78,22 @@ def layout():
                 ], style={"display":"flex","gap":"16px","marginBottom":"20px"}),
                 html.Div([
                     html.Button("Enregistrer", id="btn-cfg-save", n_clicks=0, className="btn-sga btn-gold"),
-                    html.Button("Annuler",     id="btn-cfg-cancel", n_clicks=0, className="btn-sga"),
                 ], style={"display":"flex","gap":"10px"}),
                 html.Div(id="cfg-feedback", style={"marginTop":"12px"}),
-            ], style={"background":"var(--bg-card)","border":"1px solid var(--border)",
-                      "borderRadius":"6px","padding":"32px","maxWidth":"580px","margin":"0 auto"}),
-        ], id="modal-cfg", style={"display":"none","position":"fixed","inset":"0",
-                                   "background":"rgba(0,0,0,0.5)","zIndex":"999",
-                                   "alignItems":"center","justifyContent":"center"}),
+            ], className="sga-card",
+               style={"borderTop":"3px solid var(--em)","marginBottom":"24px"}),
+        ], id="modal-cfg", style={"display":"none"}),
 
-        # ── Modal : enregistrer un paiement ──
+        # ── Panneau inline : enregistrer un paiement ──
         html.Div([
             html.Div([
-                html.Div("Enregistrer un paiement", className="sga-card-title",
-                         style={"marginBottom":"20px"}),
+                html.Div([
+                    html.Div("Enregistrer un paiement", className="sga-card-title"),
+                    html.Button("Fermer", id="btn-np-cancel", n_clicks=0,
+                                style={"background":"none","border":"none","fontSize":"20px",
+                                       "cursor":"pointer","color":"var(--muted)","lineHeight":"1"}),
+                ], style={"display":"flex","justifyContent":"space-between",
+                          "alignItems":"center","marginBottom":"20px"}),
                 html.Div("Etudiant", className="sga-label"),
                 dcc.Dropdown(id="np-student", placeholder="Selectionner un etudiant...",
                              style={"marginBottom":"14px"}),
@@ -123,14 +130,11 @@ def layout():
                 ]),
                 html.Div([
                     html.Button("Enregistrer", id="btn-np-save", n_clicks=0, className="btn-sga btn-gold"),
-                    html.Button("Annuler",     id="btn-np-cancel", n_clicks=0, className="btn-sga"),
                 ], style={"display":"flex","gap":"10px"}),
                 html.Div(id="np-feedback", style={"marginTop":"12px"}),
-            ], style={"background":"var(--bg-card)","border":"1px solid var(--border)",
-                      "borderRadius":"6px","padding":"32px","maxWidth":"580px","margin":"0 auto"}),
-        ], id="modal-np", style={"display":"none","position":"fixed","inset":"0",
-                                  "background":"rgba(0,0,0,0.5)","zIndex":"999",
-                                  "alignItems":"center","justifyContent":"center"}),
+            ], className="sga-card",
+               style={"borderTop":"3px solid var(--gold)","marginBottom":"24px"}),
+        ], id="modal-np", style={"display":"none"}),
     ])
 
 
@@ -159,10 +163,8 @@ def load_students(refresh):
     prevent_initial_call=True,
 )
 def toggle_cfg(n1, n2, n3):
-    show = {"display":"flex","position":"fixed","inset":"0","background":"rgba(0,0,0,0.5)",
-            "zIndex":"999","alignItems":"center","justifyContent":"center"}
     if ctx.triggered_id == "btn-pay-config":
-        return show
+        return {"display":"block"}
     return {"display":"none"}
 
 
@@ -174,10 +176,8 @@ def toggle_cfg(n1, n2, n3):
     prevent_initial_call=True,
 )
 def toggle_np(n1, n2, n3):
-    show = {"display":"flex","position":"fixed","inset":"0","background":"rgba(0,0,0,0.5)",
-            "zIndex":"999","alignItems":"center","justifyContent":"center"}
     if ctx.triggered_id == "btn-pay-new":
-        return show
+        return {"display":"block"}
     return {"display":"none"}
 
 

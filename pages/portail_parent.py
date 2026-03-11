@@ -30,11 +30,11 @@ def layout(**kwargs):
 
         # ── ONGLETS ───────────────────────────────────────────────────────
         html.Div([
-            html.Button("  Vue générale",    id="pp-tab-vue",    n_clicks=0, className="btn-sga btn-gold"),
-            html.Button("  Bulletin",        id="pp-tab-bull",   n_clicks=0, className="btn-sga"),
-            html.Button("  Absences",        id="pp-tab-abs",    n_clicks=0, className="btn-sga"),
-            html.Button("  Emploi du temps", id="pp-tab-edt",    n_clicks=0, className="btn-sga"),
-            html.Button("  Notifications",   id="pp-tab-notif",  n_clicks=0, className="btn-sga"),
+            html.Button("Vue generale",    id="pp-tab-vue",    n_clicks=0, className="btn-sga btn-gold"),
+            html.Button("Bulletin",        id="pp-tab-bull",   n_clicks=0, className="btn-sga"),
+            html.Button("Absences",        id="pp-tab-abs",    n_clicks=0, className="btn-sga"),
+            html.Button("Emploi du temps", id="pp-tab-edt",    n_clicks=0, className="btn-sga"),
+            html.Button("Notifications",   id="pp-tab-notif",  n_clicks=0, className="btn-sga"),
         ], style={"display":"flex","gap":"8px","marginBottom":"20px","flexWrap":"wrap"}),
 
         html.Div(id="pp-panel-vue",   style={"display":"block"}),
@@ -132,19 +132,19 @@ def render_vue(n, tick, session_data):
         alertes = []
         if moy < 10:
             alertes.append(html.Div(
-                f" Moyenne insuffisante : {moy:.2f}/20 — Contactez l'établissement.",
+                f"Moyenne insuffisante : {moy:.2f}/20 — Contactez l'établissement.",
                 className="sga-alert sga-alert-danger"))
         if taux > 20:
             alertes.append(html.Div(
-                f" Taux d'absence élevé : {taux}% — Au-delà du seuil autorisé.",
+                f"Taux d'absence eleve : {taux}% — Au-delà du seuil autorisé.",
                 className="sga-alert sga-alert-warning"))
         if nb_notifs > 0:
             alertes.append(html.Div(
-                f" {nb_notifs} nouvelle(s) notification(s) non lue(s).",
+                f"{nb_notifs} nouvelle(s) notification(s) non lue(s).",
                 className="sga-alert sga-alert-warning",
                 style={"cursor":"pointer"}))
         if not alertes:
-            alertes.append(html.Div("✓ Tout va bien — Aucune alerte.",
+            alertes.append(html.Div("Tout va bien — Aucune alerte.",
                 className="sga-alert sga-alert-success"))
 
         # Graphe évolution notes
@@ -385,7 +385,7 @@ def render_absences(n, session_data):
                 html.Td(str(nb_s), style={"textAlign":"center","color":"var(--muted)"}),
                 html.Td(f"{taux}%", style={"textAlign":"center","color":col,"fontWeight":"700"}),
                 html.Td(html.Span(
-                    "⚠ Seuil dépassé" if taux>20 else "✓ OK",
+                    "Seuil depasse" if taux>20 else "OK",
                     style={"color":col,"fontSize":"11px","fontWeight":"600"})),
                 html.Td([html.Div(d.strftime("%d/%m") if d else "—",
                                   style={"display":"inline-block","padding":"2px 6px",
@@ -540,7 +540,7 @@ def render_notifs(n, tick, session_data):
 
     if not notifs:
         return html.Div([
-            html.Div("", style={"fontSize":"48px","textAlign":"center","marginBottom":"12px"}),
+            
             html.Div("Aucune notification", style={"textAlign":"center","color":"var(--muted)",
                      "fontSize":"16px","fontFamily":"Instrument Serif,serif"}),
         ], className="sga-card", style={"padding":"48px","textAlign":"center"})
@@ -621,7 +621,7 @@ def _carte_notif(n):
                 html.Div(n["created_at"], style={"fontSize":"11px","color":"var(--muted)",
                     "marginTop":"6px"}),
             ], style={"flex":"1"}),
-            html.Span("NON LUE" if not n["lu"] else "✓",
+            html.Span("NON LUE" if not n["lu"] else "lu",
                 style={"fontSize":"9px","letterSpacing":"1px","fontWeight":"700",
                        "color":col,"border":f"1px solid {border}",
                        "padding":"3px 8px","borderRadius":"20px","flexShrink":"0",
