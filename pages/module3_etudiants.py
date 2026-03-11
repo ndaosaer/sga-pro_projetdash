@@ -14,6 +14,7 @@ def layout():
     db.close()
     return html.Div([
         dcc.Store(id='etu-classe-opts', data=classe_opts_e),
+        dcc.Store(id='etu-tab-store', data='liste'),
         html.Div([
             html.Div([html.Div("Gestion des Étudiants", className="page-title"),
                       html.Div("Fiches individuelles · Notes · Migration Excel → SQL", className="page-subtitle")]),
@@ -278,8 +279,6 @@ def upload(contents, fname, code):
 
 
 # ── Switcher onglets étudiants ─────────────────────────────────────────────────
-from dash import ctx as dctx
-
 @callback(
     Output("etu-panel-liste",  "style"),
     Output("etu-panel-import", "style"),
@@ -287,24 +286,25 @@ from dash import ctx as dctx
     Output("etu-tab-liste",    "className"),
     Output("etu-tab-import",   "className"),
     Output("etu-tab-notes",    "className"),
+    Output("etu-tab-store",    "data"),
     Input("etu-tab-liste",  "n_clicks"),
     Input("etu-tab-import", "n_clicks"),
     Input("etu-tab-notes",  "n_clicks"),
+    State("etu-tab-store",  "data"),
 )
-def switch_etu_tab(n_l, n_i, n_n):
+def switch_etu_tab(n_l, n_i, n_n, current):
+    from dash import ctx as _ctx
     show_flex = {"display":"flex","gap":"20px","marginBottom":"24px"}
-    show_blk  = {"display":"block"}
+    show_blk  = {"display":"block","marginBottom":"24px"}
     hide      = {"display":"none"}
     active    = "btn-sga btn-gold"
     normal    = "btn-sga"
-    from dash import ctx as _ctx
-    tid = _ctx.triggered_id
+    tid = _ctx.triggered_id or "etu-tab-liste"
     if tid == "etu-tab-import":
-        return hide, show_blk, hide, normal, active, normal
+        return hide, show_blk, hide, normal, active, normal, "import"
     if tid == "etu-tab-notes":
-        return hide, hide, show_blk, normal, normal, active
-    # défaut : liste (chargement initial ou clic Promotion)
-    return show_flex, hide, hide, active, normal, normal
+        return hide, hide, show_blk, normal, normal, active, "notes"
+    return show_flex, hide, hide, active, normal, normal, "liste"
 
 
 # ── Import Excel → SQL étudiants ──────────────────────────────────────────────

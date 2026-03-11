@@ -14,11 +14,11 @@
   --em-pale:      #E8F6F3;
   --em-xpale:     #F0FAF8;
 
-  /* Blanc & Beige */
-  --bg-primary:   #F8F4EE;
-  --bg-secondary: #EFE8DC;
+  /* Blanc & Beige — fond blanc, accents beige */
+  --bg-primary:   #FFFFFF;
+  --bg-secondary: #F8F4EE;
   --bg-card:      #FFFFFF;
-  --bg-hover:     #F0EBE2;
+  --bg-hover:     #F5F1EB;
 
   /* Accents naturels */
   --sable:        #C4A882;
@@ -39,7 +39,7 @@
   --text-muted:   #6B7280;
 
   /* Bordures */
-  --border:       rgba(196,168,130,0.35);
+  --border:       rgba(196,168,130,0.45);
   --border-lt:    #F0EBE2;
 
   /* Effets */
@@ -53,7 +53,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background-color: var(--bg-primary);
+  background-color: #FFFFFF;
   color: var(--text-primary);
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 14px;
@@ -186,7 +186,7 @@ body::before {
   margin-left: 245px;
   min-height: 100vh;
   padding: 36px 40px;
-  background: var(--bg-primary);
+  background: #FFFFFF;
   position: relative; z-index: 1;
   animation: pageFadeIn 0.3s ease forwards;
 }

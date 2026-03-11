@@ -16,7 +16,7 @@
   position: sticky; top: 0; z-index: 200;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 64px; height: 68px;
-  background: rgba(245,240,230,0.92);
+  background: rgba(255,255,255,0.95);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 1px 12px rgba(30,26,18,0.05);
@@ -304,7 +304,7 @@
     ellipse 80% 60% at 15% 50%,
     rgba(184,146,42,0.05) 0%,
     transparent 60%
-  ), white !important;
+  ), #FFFFFF !important;
 }
 
 /* Grille hero — plus visible */
@@ -457,7 +457,7 @@
 }
 
 /* Section alt fond beige doux */
-.lp-section-alt { background: var(--beige, #F8F4EE) !important; }
+.lp-section-alt { background: #F8F4EE !important; }
 
 /* CTA orbe émeraude */
 .lp-cta-orb {
