@@ -2,14 +2,11 @@ import dash
 from dash import html, dcc, Input, Output, State, callback
 from database import SessionLocal
 from models import Student, Grade, Course, Session as Sess, Attendance, Notification
-from models import Classe, EmploiDuTemps, User
+from models import Classe, Creneau, User
 import plotly.graph_objects as go
 from datetime import date, timedelta
 
 dash.register_page(__name__, path="/portail-parent", name="Suivi Enfant")
-
-JOURS = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"]
-CRENEAUX = ["08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00"]
 
 def layout(**kwargs):
     return html.Div([
@@ -440,58 +437,63 @@ def render_edt(n, session_data):
 
         # Récupérer l'emploi du temps de la classe
         try:
-            edts = db.query(EmploiDuTemps).filter_by(classe_id=classe_id).all()
+            edts = db.query(Creneau).filter_by(classe_id=classe_id).all()
         except Exception:
             edts = []
 
+        # Cours de la classe (fallback ou grille)
+        courses_classe = db.query(Course).all()
+
         if not edts:
-            # Fallback : afficher les cours de la classe avec horaires fictifs
-            courses = db.query(Course).all()
             return html.Div([
                 html.Div([
                     html.Div("Emploi du temps", className="sga-card-title",
-                             style={"marginBottom":"16px"}),
-                    html.Div("L'emploi du temps de cette classe n'a pas encore été saisi par le secrétariat.",
-                             style={"color":"var(--muted)","fontSize":"14px","padding":"32px",
-                                    "textAlign":"center"}),
-                    html.Div("Cours de la filière :", className="sga-label",
-                             style={"marginBottom":"12px"}),
+                             style={"marginBottom":"8px"}),
+                    html.Div("L'emploi du temps n'a pas encore été saisi. Voici les cours de la filière :",
+                             style={"color":"var(--muted)","fontSize":"13px","marginBottom":"20px"}),
                     html.Div([
                         html.Div([
-                            html.Div(c.code, style={"fontWeight":"700","color":"var(--em)",
-                                                     "fontSize":"12px","marginBottom":"4px"}),
-                            html.Div(c.libelle, style={"fontSize":"13px"}),
-                            html.Div(c.enseignant or "—",
+                            html.Div(cr.code, style={"fontWeight":"700","color":"var(--em)",
+                                                      "fontSize":"12px","marginBottom":"4px"}),
+                            html.Div(cr.libelle, style={"fontSize":"13px"}),
+                            html.Div(cr.enseignant or "—",
                                      style={"fontSize":"11px","color":"var(--muted)","marginTop":"4px"}),
                         ], style={"padding":"12px 16px","background":"var(--em-xpale)",
                                   "borderRadius":"8px","border":"1px solid var(--em-pale)"})
-                        for c in courses
+                        for cr in courses_classe
                     ], style={"display":"grid","gridTemplateColumns":"repeat(3,1fr)","gap":"12px"}),
                 ], className="sga-card"),
             ])
 
-        # Grille emploi du temps
-        grid = {j: {h: None for h in CRENEAUX} for j in JOURS}
+        # Grille : jour=int (0=Lun..5=Sam), heure_debut=float (8.0=08h00)
+        HEURES = [8.0,9.0,10.0,11.0,12.0,13.0,14.0,15.0,16.0,17.0,18.0]
+        JOURS_L = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"]
+
+        grid = {j: {h: None for h in HEURES} for j in range(6)}
         for e in edts:
-            if e.jour in JOURS and e.heure_debut in CRENEAUX:
-                grid[e.jour][e.heure_debut] = e
+            j = e.jour if isinstance(e.jour, int) else 0
+            h = float(e.heure_debut) if e.heure_debut else 8.0
+            if j in grid and h in grid[j]:
+                grid[j][h] = e
+
+        def fmt_h(h): return f"{int(h):02d}h{int((h%1)*60):02d}"
 
         rows_edt = []
-        for heure in CRENEAUX:
-            cells = [html.Td(heure, style={"fontSize":"11px","color":"var(--muted)",
-                                            "fontWeight":"600","width":"70px","padding":"6px 8px"})]
-            for jour in JOURS:
-                entry = grid[jour].get(heure)
+        for h in HEURES:
+            cells = [html.Td(fmt_h(h), style={"fontSize":"11px","color":"var(--muted)",
+                                               "fontWeight":"600","width":"70px","padding":"6px 8px",
+                                               "whiteSpace":"nowrap"})]
+            for j in range(6):
+                entry = grid[j].get(h)
                 if entry:
                     cells.append(html.Td(html.Div([
-                        html.Div(entry.course_code, style={"fontSize":"11px","fontWeight":"700",
-                                                            "color":"var(--em)"}),
-                        html.Div(entry.salle or "",style={"fontSize":"10px","color":"var(--muted)"}),
+                        html.Div(entry.course_code, style={"fontSize":"11px","fontWeight":"700","color":"var(--em)"}),
+                        html.Div(entry.salle or "", style={"fontSize":"10px","color":"var(--muted)"}),
                     ], style={"padding":"6px 8px","background":"var(--em-xpale)",
                               "borderRadius":"6px","border":"1px solid var(--em-pale)"}),
                     style={"padding":"4px"}))
                 else:
-                    cells.append(html.Td("", style={"padding":"4px"}))
+                    cells.append(html.Td("", style={"padding":"4px","minWidth":"90px"}))
             rows_edt.append(html.Tr(cells))
 
         return html.Div([
@@ -502,8 +504,8 @@ def render_edt(n, session_data):
                     html.Table([
                         html.Thead(html.Tr(
                             [html.Th("Heure")] +
-                            [html.Th(j, style={"textAlign":"center","minWidth":"100px"})
-                             for j in JOURS]
+                            [html.Th(j, style={"textAlign":"center","minWidth":"90px"})
+                             for j in JOURS_L]
                         )),
                         html.Tbody(rows_edt),
                     ], className="sga-table", style={"width":"100%","minWidth":"700px"}),
