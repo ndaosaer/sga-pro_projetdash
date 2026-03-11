@@ -21,6 +21,8 @@ def layout():
     return html.Div([
         dcc.Store(id="pay-refresh", data=0),
         dcc.Store(id="pay-selected-student", data=None),
+        dcc.Store(id="store-cfg-open", data=False),
+        dcc.Store(id="store-np-open", data=False),
 
         html.Div([
             html.Div([
@@ -154,31 +156,41 @@ def load_students(refresh):
         db.close()
 
 
-# ── Toggles modaux ──
+# ── Toggles panels ──
 @callback(
-    Output("modal-cfg","style"),
-    Input("btn-pay-config","n_clicks"),
-    Input("btn-cfg-cancel","n_clicks"),
-    Input("btn-cfg-save","n_clicks"),
+    Output("store-cfg-open", "data"),
+    Input("btn-pay-config",  "n_clicks"),
+    Input("btn-cfg-cancel",  "n_clicks"),
     prevent_initial_call=True,
 )
-def toggle_cfg(n1, n2, n3):
-    if ctx.triggered_id == "btn-pay-config":
-        return {"display":"block"}
-    return {"display":"none"}
+def open_cfg(n_open, n_close):
+    return ctx.triggered_id == "btn-pay-config"
 
 
 @callback(
-    Output("modal-np","style"),
-    Input("btn-pay-new","n_clicks"),
-    Input("btn-np-cancel","n_clicks"),
-    Input("btn-np-save","n_clicks"),
+    Output("modal-cfg", "style"),
+    Input("store-cfg-open", "data"),
+)
+def show_cfg(is_open):
+    return {"display": "block"} if is_open else {"display": "none"}
+
+
+@callback(
+    Output("store-np-open", "data"),
+    Input("btn-pay-new",    "n_clicks"),
+    Input("btn-np-cancel",  "n_clicks"),
     prevent_initial_call=True,
 )
-def toggle_np(n1, n2, n3):
-    if ctx.triggered_id == "btn-pay-new":
-        return {"display":"block"}
-    return {"display":"none"}
+def open_np(n_open, n_close):
+    return ctx.triggered_id == "btn-pay-new"
+
+
+@callback(
+    Output("modal-np", "style"),
+    Input("store-np-open", "data"),
+)
+def show_np(is_open):
+    return {"display": "block"} if is_open else {"display": "none"}
 
 
 # ── Sauvegarder config frais ──
