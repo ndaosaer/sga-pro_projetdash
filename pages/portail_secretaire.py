@@ -28,7 +28,7 @@ def layout(**kwargs):
             html.Button("Cours",           id="ps-tab-crs", n_clicks=0, className="btn-sga"),
             html.Button("Présences",       id="ps-tab-att", n_clicks=0, className="btn-sga"),
             html.Button("Calendrier",      id="ps-tab-cal", n_clicks=0, className="btn-sga"),
-            html.Button("📥 Migration Excel", id="ps-tab-mig", n_clicks=0, className="btn-sga"),
+            html.Button(" Migration Excel", id="ps-tab-mig", n_clicks=0, className="btn-sga"),
         ], style={"display":"flex","gap":"8px","padding":"16px 24px","flexWrap":"wrap",
                   "borderBottom":"1px solid var(--border-lt)","background":"var(--bg-card)"}),
 
@@ -88,7 +88,7 @@ def render_tab(n_stu, n_crs, n_att, n_cal, n_mig, trigger):
                                             style={"width":"100%"})], style={"flex":"1"}),
                     ], style={"display":"flex","gap":"16px","marginBottom":"20px"}),
                     _dcc.Upload(id="ps-upload-etu",
-                        children=html.Div([html.Div("📁",style={"fontSize":"32px","marginBottom":"8px"}),
+                        children=html.Div([html.Div("",style={"fontSize":"32px","marginBottom":"8px"}),
                             html.Div("Glisser-déposer votre fichier Excel ici"),
                             html.A("parcourir",style={"color":"var(--em)","fontWeight":"700"}),
                             html.Div(".xlsx .xls .csv",style={"fontSize":"11px","color":"var(--muted)","marginTop":"6px"})],
@@ -258,7 +258,7 @@ def ps_import_etu(contents, fname, default_classe_id, default_pwd):
         c_classe = fc(["classe_code","classe","class","niveau"])
 
         if not c_nom or not c_prenom:
-            return html.Div(f"❌ Colonnes Nom/Prénom introuvables. Colonnes : {', '.join(df.columns.tolist())}",
+            return html.Div(f" Colonnes Nom/Prénom introuvables. Colonnes : {', '.join(df.columns.tolist())}",
                             className="sga-alert sga-alert-danger")
 
         db = SessionLocal()
@@ -297,9 +297,9 @@ def ps_import_etu(contents, fname, default_classe_id, default_pwd):
                 errors.append(f"Ligne {idx+2}: {e}")
 
         db.commit(); db.close()
-        items = [html.Div(f"✅ {imported} étudiant(s) importé(s).", className="sga-alert sga-alert-success")]
-        if skipped: items.append(html.Div(f"⚠ {skipped} doublon(s) ignoré(s).", className="sga-alert sga-alert-warning"))
-        if errors:  items.append(html.Div(f"❌ {len(errors)} erreur(s).", className="sga-alert sga-alert-danger"))
+        items = [html.Div(f" {imported} étudiant(s) importé(s).", className="sga-alert sga-alert-success")]
+        if skipped: items.append(html.Div(f" {skipped} doublon(s) ignoré(s).", className="sga-alert sga-alert-warning"))
+        if errors:  items.append(html.Div(f" {len(errors)} erreur(s).", className="sga-alert sga-alert-danger"))
         return html.Div(items)
     except Exception as e:
-        return html.Div(f"❌ Erreur fichier : {e}", className="sga-alert sga-alert-danger")
+        return html.Div(f" Erreur fichier : {e}", className="sga-alert sga-alert-danger")

@@ -89,10 +89,10 @@ def afficher_appel(code):
 
             # Boutons rapides
             html.Div([
-                html.Button("Tout présent ✓", id="ar-tout-present",
+                html.Button("Tout présent ", id="ar-tout-present",
                             className="btn-sga btn-green",
                             style={"fontSize":"12px","padding":"8px 16px"}),
-                html.Button("Tout absent ✗", id="ar-tout-absent",
+                html.Button("Tout absent ", id="ar-tout-absent",
                             className="btn-sga btn-danger",
                             style={"fontSize":"12px","padding":"8px 16px"}),
             ], style={"display":"flex","gap":"10px","marginBottom":"20px"}),
@@ -106,7 +106,7 @@ def afficher_appel(code):
                       "marginBottom":"24px"}),
 
             # Bouton valider
-            html.Button("✓ Valider l'appel", id="ar-valider",
+            html.Button(" Valider l'appel", id="ar-valider",
                         className="btn-sga btn-gold",
                         style={"width":"100%","justifyContent":"center",
                                "fontSize":"14px","padding":"14px","letterSpacing":"3px"}),
@@ -222,7 +222,7 @@ def valider_appel(n, code, duree, theme, absents):
         db.commit()
         nb_abs = len(absents or [])
         return html.Div([
-            html.Div("✓ Séance enregistrée !", style={
+            html.Div(" Séance enregistrée !", style={
                 "fontFamily":"'Times New Roman',serif","fontSize":"20px",
                 "fontWeight":"700","color":"var(--green)","marginBottom":"8px",
             }),

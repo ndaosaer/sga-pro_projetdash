@@ -303,6 +303,6 @@ def init_users():
                 u.created_at = datetime.now()
                 db.add(u)
             db.commit()
-            print("✓ Comptes par défaut créés.")
+            print(" Comptes par défaut créés.")
     finally:
         db.close()

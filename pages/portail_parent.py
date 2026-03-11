@@ -30,11 +30,11 @@ def layout(**kwargs):
 
         # ── ONGLETS ───────────────────────────────────────────────────────
         html.Div([
-            html.Button("📊  Vue générale",    id="pp-tab-vue",    n_clicks=0, className="btn-sga btn-gold"),
-            html.Button("📋  Bulletin",        id="pp-tab-bull",   n_clicks=0, className="btn-sga"),
-            html.Button("✅  Absences",        id="pp-tab-abs",    n_clicks=0, className="btn-sga"),
-            html.Button("🗓  Emploi du temps", id="pp-tab-edt",    n_clicks=0, className="btn-sga"),
-            html.Button("🔔  Notifications",   id="pp-tab-notif",  n_clicks=0, className="btn-sga"),
+            html.Button("  Vue générale",    id="pp-tab-vue",    n_clicks=0, className="btn-sga btn-gold"),
+            html.Button("  Bulletin",        id="pp-tab-bull",   n_clicks=0, className="btn-sga"),
+            html.Button("  Absences",        id="pp-tab-abs",    n_clicks=0, className="btn-sga"),
+            html.Button("  Emploi du temps", id="pp-tab-edt",    n_clicks=0, className="btn-sga"),
+            html.Button("  Notifications",   id="pp-tab-notif",  n_clicks=0, className="btn-sga"),
         ], style={"display":"flex","gap":"8px","marginBottom":"20px","flexWrap":"wrap"}),
 
         html.Div(id="pp-panel-vue",   style={"display":"block"}),
@@ -132,15 +132,15 @@ def render_vue(n, tick, session_data):
         alertes = []
         if moy < 10:
             alertes.append(html.Div(
-                f"⚠ Moyenne insuffisante : {moy:.2f}/20 — Contactez l'établissement.",
+                f" Moyenne insuffisante : {moy:.2f}/20 — Contactez l'établissement.",
                 className="sga-alert sga-alert-danger"))
         if taux > 20:
             alertes.append(html.Div(
-                f"⚠ Taux d'absence élevé : {taux}% — Au-delà du seuil autorisé.",
+                f" Taux d'absence élevé : {taux}% — Au-delà du seuil autorisé.",
                 className="sga-alert sga-alert-warning"))
         if nb_notifs > 0:
             alertes.append(html.Div(
-                f"🔔 {nb_notifs} nouvelle(s) notification(s) non lue(s).",
+                f" {nb_notifs} nouvelle(s) notification(s) non lue(s).",
                 className="sga-alert sga-alert-warning",
                 style={"cursor":"pointer"}))
         if not alertes:
@@ -540,7 +540,7 @@ def render_notifs(n, tick, session_data):
 
     if not notifs:
         return html.Div([
-            html.Div("🔔", style={"fontSize":"48px","textAlign":"center","marginBottom":"12px"}),
+            html.Div("", style={"fontSize":"48px","textAlign":"center","marginBottom":"12px"}),
             html.Div("Aucune notification", style={"textAlign":"center","color":"var(--muted)",
                      "fontSize":"16px","fontFamily":"Instrument Serif,serif"}),
         ], className="sga-card", style={"padding":"48px","textAlign":"center"})
@@ -606,8 +606,8 @@ def _carte_notif(n):
         "info":    ("rgba(14,102,85,0.04)",  "rgba(14,102,85,0.1)",  "var(--em-lt)"),
     }
     bg, border, col = couleurs.get(n["type"], couleurs["info"])
-    icones = {"absence":"🚨","note":"📉","paiement":"💳","info":"ℹ️"}
-    icone  = icones.get(n["categorie"], "🔔")
+    icones = {"absence":"","note":"","paiement":"","info":""}
+    icone  = icones.get(n["categorie"], "")
     opacity = "1" if not n["lu"] else "0.6"
 
     return html.Div([

@@ -8,11 +8,11 @@ from datetime import datetime
 dash.register_page(__name__, path="/auth", name="Connexion")
 
 ROLES = [
-    ("admin",     "◈", "Directeur"),
-    ("teacher",   "◉", "Enseignant"),
-    ("student",   "◆", "Etudiant"),
-    ("parent",    "◎", "Parent"),
-    ("secretary", "▣", "Secretaire"),
+    ("admin",     "", "Directeur"),
+    ("teacher",   "", "Enseignant"),
+    ("student",   "", "Etudiant"),
+    ("parent",    "", "Parent"),
+    ("secretary", "", "Secretaire"),
 ]
 
 def layout():

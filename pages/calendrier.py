@@ -20,14 +20,14 @@ def layout():
                 html.Div("Visualisation et planification mensuelle", className="page-subtitle"),
             ]),
             html.Div([
-                html.Button("◀", id="cal-prev", className="btn-sga btn-gold",
+                html.Button("", id="cal-prev", className="btn-sga btn-gold",
                             style={"padding":"8px 16px","fontSize":"16px"}),
                 html.Div(id="cal-titre", style={
                     "fontFamily":"Times New Roman,serif","fontSize":"22px",
                     "fontWeight":"700","color":"var(--text-primary)",
                     "minWidth":"200px","textAlign":"center","letterSpacing":"2px",
                 }),
-                html.Button("▶", id="cal-next", className="btn-sga btn-gold",
+                html.Button("", id="cal-next", className="btn-sga btn-gold",
                             style={"padding":"8px 16px","fontSize":"16px"}),
                 html.Button("Aujourd'hui", id="cal-today", className="btn-sga btn-green",
                             style={"marginLeft":"12px","fontSize":"11px"}),
@@ -327,7 +327,7 @@ def planifier(n, code, date_str, duree, theme):
         db.add(Session(course_code=code, date=d,
                        duree=float(duree), theme=theme or ""))
         db.commit()
-        return html.Div(f"✓ Séance {code} planifiée le {date_str}.",
+        return html.Div(f" Séance {code} planifiée le {date_str}.",
                         className="sga-alert sga-alert-success")
     except Exception as e:
         db.rollback()

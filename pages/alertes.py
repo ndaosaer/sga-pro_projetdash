@@ -112,7 +112,7 @@ def layout():
                 html.Div("Alertes Intelligentes", className="page-title"),
                 html.Div("Surveillance automatique de la promotion", className="page-subtitle"),
             ]),
-            html.Button("🔄 Actualiser", id="btn-refresh-alertes",
+            html.Button(" Actualiser", id="btn-refresh-alertes",
                         className="btn-sga btn-gold"),
         ], className="topbar"),
 

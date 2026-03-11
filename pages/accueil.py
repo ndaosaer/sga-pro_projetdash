@@ -99,7 +99,7 @@ def layout():
         # ── TICKER ─────────────────────────────────────────────────────────
         html.Div([
             html.Div([
-                *[html.Span([txt, html.Span("◆", style={"color":"var(--em-lt)","margin":"0 24px"})])
+                *[html.Span([txt, html.Span("", style={"color":"var(--em-lt)","margin":"0 24px"})])
                   for txt in ["Appel en 10 secondes","Bulletins PDF automatisés",
                               "Migration Excel → SQL","Paiements Wave & Orange Money",
                               "Analytics avancés","Concours d'admission",
@@ -157,66 +157,66 @@ def layout():
             html.Div([
                 # Colonne 1 — Pédagogie
                 html.Div([
-                    html.Div("📚 Pédagogie", style={"fontSize":"10px","letterSpacing":"3px",
+                    html.Div(" Pédagogie", style={"fontSize":"10px","letterSpacing":"3px",
                         "textTransform":"uppercase","color":"var(--em)","fontWeight":"700",
                         "marginBottom":"16px","padding":"0 0 10px",
                         "borderBottom":"2px solid var(--em-pale)"}),
                     *[_module_row(icon, name, href) for icon, name, href in [
-                        ("📚", "Cours & Modules",      "/cours"),
-                        ("✅", "Appel Rapide",          "/appel"),
-                        ("📊", "Notes & Bulletins",    "/bulletin"),
-                        ("📅", "Emploi du temps",      "/emploi-du-temps"),
-                        ("📆", "Calendrier",            "/calendrier"),
-                        ("📈", "Analytics",             "/analytics"),
-                        ("⚖",  "Comparateur",          "/comparateur"),
+                        ("", "Cours & Modules",      "/cours"),
+                        ("", "Appel Rapide",          "/appel"),
+                        ("", "Notes & Bulletins",    "/bulletin"),
+                        ("", "Emploi du temps",      "/emploi-du-temps"),
+                        ("", "Calendrier",            "/calendrier"),
+                        ("", "Analytics",             "/analytics"),
+                        ("",  "Comparateur",          "/comparateur"),
                     ]],
                 ], className="lp-module-col"),
 
                 # Colonne 2 — Gestion
                 html.Div([
-                    html.Div("🏫 Gestion", style={"fontSize":"10px","letterSpacing":"3px",
+                    html.Div(" Gestion", style={"fontSize":"10px","letterSpacing":"3px",
                         "textTransform":"uppercase","color":"var(--em)","fontWeight":"700",
                         "marginBottom":"16px","padding":"0 0 10px",
                         "borderBottom":"2px solid var(--em-pale)"}),
                     *[_module_row(icon, name, href) for icon, name, href in [
-                        ("👨‍🎓", "Étudiants & Fiches",  "/etudiants"),
-                        ("🏫",  "Classes & Niveaux",   "/classes"),
-                        ("📋",  "Présences",            "/presences"),
-                        ("🔔",  "Alertes",              "/alertes"),
-                        ("📢",  "Messagerie",           "/messagerie"),
-                        ("📋",  "Rapports PDF",         "/rapports"),
-                        ("🗂",  "Direction",            "/direction"),
+                        ("", "Étudiants & Fiches",  "/etudiants"),
+                        ("",  "Classes & Niveaux",   "/classes"),
+                        ("",  "Présences",            "/presences"),
+                        ("",  "Alertes",              "/alertes"),
+                        ("",  "Messagerie",           "/messagerie"),
+                        ("",  "Rapports PDF",         "/rapports"),
+                        ("",  "Direction",            "/direction"),
                     ]],
                 ], className="lp-module-col"),
 
                 # Colonne 3 — Administration
                 html.Div([
-                    html.Div("⚙️ Administration", style={"fontSize":"10px","letterSpacing":"3px",
+                    html.Div(" Administration", style={"fontSize":"10px","letterSpacing":"3px",
                         "textTransform":"uppercase","color":"var(--em)","fontWeight":"700",
                         "marginBottom":"16px","padding":"0 0 10px",
                         "borderBottom":"2px solid var(--em-pale)"}),
                     *[_module_row(icon, name, href) for icon, name, href in [
-                        ("💰", "Paiements",             "/paiements"),
-                        ("💳", "Paiement en ligne",     "/paiement-en-ligne"),
-                        ("🏆", "Concours admission",    "/concours"),
-                        ("🎓", "Admin Concours",        "/admin-concours"),
-                        ("⚙️", "Gestion Comptes",       "/gestion-comptes"),
-                        ("👨‍💼","Secrétariat",           "/portail-secretaire"),
-                        ("🗂", "Migration Excel→SQL",   "/etudiants"),
+                        ("", "Paiements",             "/paiements"),
+                        ("", "Paiement en ligne",     "/paiement-en-ligne"),
+                        ("", "Concours admission",    "/concours"),
+                        ("", "Admin Concours",        "/admin-concours"),
+                        ("", "Gestion Comptes",       "/gestion-comptes"),
+                        ("","Secrétariat",           "/portail-secretaire"),
+                        ("", "Migration Excel→SQL",   "/etudiants"),
                     ]],
                 ], className="lp-module-col"),
 
                 # Colonne 4 — Portails
                 html.Div([
-                    html.Div("🌐 Portails", style={"fontSize":"10px","letterSpacing":"3px",
+                    html.Div(" Portails", style={"fontSize":"10px","letterSpacing":"3px",
                         "textTransform":"uppercase","color":"var(--em)","fontWeight":"700",
                         "marginBottom":"16px","padding":"0 0 10px",
                         "borderBottom":"2px solid var(--em-pale)"}),
                     *[_module_row(icon, name, href) for icon, name, href in [
-                        ("🎓", "Espace Étudiant",      "/portail-etudiant"),
-                        ("👨‍👩‍👧","Suivi Parent",         "/portail-parent"),
-                        ("📝", "Portail Concours",     "/concours"),
-                        ("📊", "Dashboard Admin",      "/"),
+                        ("", "Espace Étudiant",      "/portail-etudiant"),
+                        ("","Suivi Parent",         "/portail-parent"),
+                        ("", "Portail Concours",     "/concours"),
+                        ("", "Dashboard Admin",      "/"),
                     ]],
                 ], className="lp-module-col"),
 
@@ -256,7 +256,7 @@ def layout():
             html.Div([
                 html.Div([
                     html.Div([
-                        html.Span("📁", style={"fontSize":"32px"}),
+                        html.Span("", style={"fontSize":"32px"}),
                         html.Div("etudiants_2025.xlsx",
                                  style={"fontFamily":"monospace","fontSize":"13px",
                                         "color":"var(--em)","marginTop":"8px","fontWeight":"700"}),
@@ -268,11 +268,11 @@ def layout():
                     html.Div("↓", style={"textAlign":"center","fontSize":"24px","color":"var(--em)",
                                          "marginBottom":"16px"}),
                     html.Div([
-                        _import_row("✓", "FALL Demba",     "L3-STAT", "var(--em)"),
-                        _import_row("✓", "AIDARA Ndeye",   "M1-STAT", "var(--em)"),
-                        _import_row("✓", "MBAYE Khadija",  "L1-STAT", "var(--em)"),
-                        _import_row("⚠", "SOW Demba",      "Doublon", "var(--gold)"),
-                        _import_row("✓", "DIOP Fatou",     "L2-STAT", "var(--em)"),
+                        _import_row("", "FALL Demba",     "L3-STAT", "var(--em)"),
+                        _import_row("", "AIDARA Ndeye",   "M1-STAT", "var(--em)"),
+                        _import_row("", "MBAYE Khadija",  "L1-STAT", "var(--em)"),
+                        _import_row("", "SOW Demba",      "Doublon", "var(--gold)"),
+                        _import_row("", "DIOP Fatou",     "L2-STAT", "var(--em)"),
                     ], style={"background":"white","borderRadius":"8px",
                               "border":"1px solid var(--border-lt)","overflow":"hidden"}),
                     html.Div("58 importés · 2 doublons ignorés",
@@ -364,8 +364,8 @@ def layout():
                 ]),
             ], className="lp-footer-grid"),
             html.Div([
-                html.Span("© 2026 Nafa Scolaire — Tous droits réservés"),
-                html.Span("Fait pour les enseignants du monde francophone ◆"),
+                html.Span(" 2026 Nafa Scolaire — Tous droits réservés"),
+                html.Span("Fait pour les enseignants du monde francophone"),
             ], className="lp-footer-bottom"),
         ], className="lp-footer"),
 

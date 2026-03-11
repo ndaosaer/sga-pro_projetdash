@@ -51,7 +51,7 @@ def layout():
                                             "fontSize":"14px","padding":"10px",
                                             "resize":"vertical"}),
                     ], style={"marginBottom":"20px"}),
-                    html.Button("📄 Générer le bulletin PDF", id="btn-gen-bull",
+                    html.Button(" Générer le bulletin PDF", id="btn-gen-bull",
                                 className="btn-sga btn-gold",
                                 style={"width":"100%","justifyContent":"center",
                                        "fontSize":"13px","padding":"14px"}),
@@ -65,7 +65,7 @@ def layout():
                              style={"marginBottom":"16px"}),
                     html.Div("Génère un fichier ZIP avec les bulletins de tous les étudiants.",
                              style={"color":"var(--muted)","fontSize":"13px","marginBottom":"16px"}),
-                    html.Button("📦 Générer tous les bulletins", id="btn-gen-all",
+                    html.Button(" Générer tous les bulletins", id="btn-gen-all",
                                 className="btn-sga btn-green",
                                 style={"width":"100%","justifyContent":"center","fontSize":"13px"}),
                     dcc.Download(id="dl-all-bulletins"),
@@ -397,11 +397,11 @@ def telecharger_bulletin(n, sid, periode, appre):
     pdf  = _generer_pdf(data, periode or "Semestre 1", appre or "")
     if pdf is None:
         return None, html.Div(
-            "⚠ reportlab non installé. Lancez : pip install reportlab",
+            " reportlab non installé. Lancez : pip install reportlab",
             className="sga-alert sga-alert-danger")
     fname = f"bulletin_{data['nom']}_{data['prenom']}.pdf".replace(" ", "_")
     return dcc.send_bytes(pdf, filename=fname), html.Div(
-        f"✓ {fname} généré.", className="sga-alert sga-alert-success")
+        f" {fname} généré.", className="sga-alert sga-alert-success")
 
 
 @callback(
@@ -426,4 +426,4 @@ def telecharger_tous(n, periode):
                 zf.writestr(f"bulletin_{nom}_{prenom}.pdf".replace(" ","_"), pdf)
     buf_zip.seek(0)
     return dcc.send_bytes(buf_zip.read(), filename="bulletins_promotion.zip"), html.Div(
-        f"✓ {len(students)} bulletins générés.", className="sga-alert sga-alert-success")
+        f" {len(students)} bulletins générés.", className="sga-alert sga-alert-success")

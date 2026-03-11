@@ -16,7 +16,7 @@ ROLES = [
 ]
 ROLE_COLORS = {"admin":"var(--gold)","teacher":"var(--green)",
                "student":"#5A9BC2","parent":"var(--copper)","secretary":"var(--muted)"}
-ROLE_ICONS  = {"admin":"◈","teacher":"◉","student":"◆","parent":"◎","secretary":"▣"}
+ROLE_ICONS  = {"admin":"","teacher":"","student":"","parent":"","secretary":""}
 
 def layout():
     db = SessionLocal()
