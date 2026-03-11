@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 /* ═══════════════════════════════════════════════
-   SGA PRO — THÈME ÉMERAUDE NATUREL
+   Nafa Scolaire — THÈME ÉMERAUDE NATUREL
    Blanc · Beige chaud · Vert émeraude africain
    Instrument Serif (titres) + Plus Jakarta Sans
 ═══════════════════════════════════════════════ */
@@ -350,12 +350,18 @@ body::before {
   font-size: 12px; font-weight: 700;
   letter-spacing: 0.5px;
   padding: 10px 20px; border-radius: 7px;
-  border: 1px solid; cursor: pointer;
+  border: 1px solid var(--border, #E5DDD0); cursor: pointer;
+  color: var(--text-muted, #6B7280);
   transition: all 0.2s ease;
   display: inline-flex; align-items: center; gap: 8px;
-  background: transparent;
+  background: var(--bg-card, #FFFFFF);
   position: relative; overflow: hidden;
   white-space: nowrap;
+}
+.btn-sga:hover {
+  border-color: var(--em, #0E6655);
+  color: var(--em, #0E6655);
+  background: var(--em-pale, #E8F6F3);
 }
 .btn-sga:active { transform: translateY(1px) !important; }
 

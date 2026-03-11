@@ -290,7 +290,6 @@ from dash import ctx as dctx
     Input("etu-tab-liste",  "n_clicks"),
     Input("etu-tab-import", "n_clicks"),
     Input("etu-tab-notes",  "n_clicks"),
-    prevent_initial_call=True,
 )
 def switch_etu_tab(n_l, n_i, n_n):
     show_flex = {"display":"flex","gap":"20px","marginBottom":"24px"}
@@ -298,12 +297,13 @@ def switch_etu_tab(n_l, n_i, n_n):
     hide      = {"display":"none"}
     active    = "btn-sga btn-gold"
     normal    = "btn-sga"
-    tid = dctx.triggered_id
+    from dash import ctx as _ctx
+    tid = _ctx.triggered_id
     if tid == "etu-tab-import":
         return hide, show_blk, hide, normal, active, normal
     if tid == "etu-tab-notes":
         return hide, hide, show_blk, normal, normal, active
-    # défaut : liste
+    # défaut : liste (chargement initial ou clic Promotion)
     return show_flex, hide, hide, active, normal, normal
 
 
